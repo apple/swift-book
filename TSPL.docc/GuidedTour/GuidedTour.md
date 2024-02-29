@@ -2449,6 +2449,17 @@ anyCommonElements([1, 2, 3], [3])
 Writing `<T: Equatable>`
 is the same as writing `<T> ... where T: Equatable`.
 
+Use `repeat` and `each` to make generic functions
+where the number of arguments can vary.
+
+```
+func printEach<each T>(_ t: repeat each T) {
+  repeat print(each t)
+}
+
+printEach(1, "hello", true)
+```
+
 > Beta Software:
 >
 > This documentation contains preliminary information about an API or technology in development. This information is subject to change, and software implemented according to this documentation should be tested with final operating system software.
