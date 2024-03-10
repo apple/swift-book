@@ -231,6 +231,14 @@ the default access level of the type's members will be internal.
 > and avoids presenting the internal workings of a type as public API by mistake.
 
 ```swift
+open class SomeOpenClass {                      // explicitly open class
+    open var someOpenProperty = 0                // explicitly open class member
+    public var somePublicProperty = 0            // explicitly public class member
+    var someInternalProperty = 0                 // implicitly internal class member
+    fileprivate func someFilePrivateMethod() {}  // explicitly file-private class member
+    private func somePrivateMethod() {}          // explicitly private class member
+}
+
 public class SomePublicClass {                  // explicitly public class
     public var somePublicProperty = 0            // explicitly public class member
     var someInternalProperty = 0                 // implicitly internal class member
