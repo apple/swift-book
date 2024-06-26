@@ -1480,6 +1480,48 @@ A single expression inside parentheses is a parenthesized expression.
 > *tuple-element-list* → *tuple-element* | *tuple-element* **`,`** *tuple-element-list* \
 > *tuple-element* → *expression* | *identifier* **`:`** *expression*
 
+### Parameter-Pack Expression
+
+XXX OUTLINE:
+
+- A `repeat` expression must contain one or more `each` expressions
+  and has the shape `repeat <#repetition pattern#>`
+
+- TODO list of contexts where expansion is supported
+
+  + in a tuple, producing tuple elements
+  + as a statement, including at top level, repeating the statement's expression
+  + but not in a function call, producing arguments
+
+- The *repetition pattern* is repeated once for each type in the pack
+
+- If an expression includes both the `repeat` operator and
+  a `try` or `await` operator,
+  the `repeat` operator must appear first.
+  (So `repeat try each foo` or `repeat each try foo`)
+
+- All of the `each` expressions in a parameter-pack expression
+  must expand packs that have the same number of types.
+
+- In a function declaration,
+  an argument whose type is a parameter-pack expansion type
+  must be the last parameter
+  or the parameter after it must have a label.
+
+- It's valid for a pack expression contain no elements,
+  in which case the parameter-pack expansion expression isn't evaluated at all (zero times)
+
+<!--
+You can't write ( immediately after `each`
+because `each(` is parsed as a function call.
+-->
+
+> Grammar of a pack-expansion expression:
+>
+> *parameter-pack-expression* → **`each`** *expression*
+>
+> *parameter-pack-expansion-expression* → **`repeat`** *expression*
+
 ### Wildcard Expression
 
 A *wildcard expression*
