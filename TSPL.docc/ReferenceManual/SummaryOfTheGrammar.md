@@ -324,7 +324,7 @@ make the same change here also.
 
 > Grammar of an in-out expression:
 >
-> *in-out-expression* → **`&`** *primary-expression*
+> *in-out-expression* → **`&`** *postfix-expression*
 
 > Grammar of a try expression:
 >
