@@ -1694,11 +1694,9 @@ The additional result-building methods are as follows:
   or to perform other postprocessing on a result before returning it.
 
 - term `static func buildLimitedAvailability(_ component: Component) -> Component`:
-  Builds a partial result that propagates or erases type information
+  Builds a partial result that erases type information for
   outside a compiler-control statement
   that performs an availability check.
-  You can use this to erase type information
-  that varies between the conditional branches.
 
 For example, the code below defines a simple result builder
 that builds an array of integers.
@@ -1797,7 +1795,7 @@ into code that calls the static methods of the result builder type:
   You can define an overload of `buildExpression(_:)`
   that takes an argument of type `()` to handle assignments specifically.
 - A branch statement that checks an availability condition
-  becomes a call to the `buildLimitedAvailability(_:)` method.
+  becomes a call to the `buildLimitedAvailability(_:)` method if one is defined.
   This transformation happens before the transformation into a call to
   `buildEither(first:)`, `buildEither(second:)`, or `buildOptional(_:)`.
   You use the `buildLimitedAvailability(_:)` method to erase type information
@@ -1884,7 +1882,7 @@ into code that calls the static methods of the result builder type:
       func draw() -> String { return content.draw() }
   }
   extension DrawingBuilder {
-      static func buildLimitedAvailability(_ content: Drawable) -> AnyDrawable {
+      static func buildLimitedAvailability(_ content: some Drawable) -> AnyDrawable {
           return AnyDrawable(content: content)
       }
   }
@@ -1900,6 +1898,11 @@ into code that calls the static methods of the result builder type:
   ```
 
   <!-- Comment block with swifttest for the code listing above is after the end of this bulleted list, due to tooling limitations. -->
+
+  Note that the above code compiled before
+  implementing the `buildLimitedAvailability` method,
+  as its role is not to enable the `if #available` syntax, but to
+  return a type that's always available.
 
 - A branch statement becomes a series of nested calls to the
   `buildEither(first:)` and `buildEither(second:)` methods.
@@ -2276,7 +2279,7 @@ into code that calls the static methods of the result builder type:
          func draw() -> String { return content.draw() }
      }
   -> extension DrawingBuilder {
-         static func buildLimitedAvailability(_ content: Drawable) -> AnyDrawable {
+         static func buildLimitedAvailability(_ content: some Drawable) -> AnyDrawable {
              return AnyDrawable(content: content)
          }
      }
