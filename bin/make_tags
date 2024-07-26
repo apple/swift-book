@@ -1,0 +1,60 @@
+#! /usr/bin/env python3
+
+# This source file is part of the Swift.org open source project
+# 
+# Copyright (c) 2023 Apple Inc. and the Swift project authors
+# Licensed under Apache License v2.0 with Runtime Library Exception
+# 
+# See https://swift.org/LICENSE.txt for license information
+# See https://swift.org/CONTRIBUTORS.txt for Swift project authors
+
+"""
+Generates a tags file, using the POSIX ctags syntax, for navigation while
+editing.  The tags file provides "jump to definition" information about DocC
+links to headings and syntactic categories in the formal grammar.
+
+To use these tags, configure your editor to include a-z, A-Z, pound (#),
+hyphen (-), and colon (:), as valid characters in a tag.
+"""
+
+import os
+import re
+
+CHAPTER_REGEX = re.compile(r'^# ')
+HEADING_REGEX = re.compile(r'^#+ ')
+GRAMMAR_REGEX = re.compile(r'^> \*[a-z-]*\* → ')
+
+chapter = None
+tags = []
+
+os.chdir('TSPL.docc')
+for root, dirs, files in os.walk('.'):
+    for file in files:
+        if not file.endswith('.md'):
+            continue
+        if file == 'SummaryOfTheGrammar.md':
+            continue
+        path = os.path.join(root, file)
+        with open(path, encoding='utf8') as f:
+            chapter = None
+            for line in f:
+                line = line.rstrip()
+                if CHAPTER_REGEX.match(line):
+                    chapter = line.lstrip('# ').replace(' ', '')
+                    tag = 'doc:' + chapter
+                    search =  '/^' + line.replace('/', '\\/') + '/'
+                    tags.append(tag + '\t' + path + '\t' + search + '\n')
+                elif HEADING_REGEX.match(line):
+                    heading = line.lstrip('# ').replace(' ', '-')
+                    tag = 'doc:' + chapter + '#' + heading
+                    search =  '/^' + line.replace('/', '\\/') + '/'
+                    tags.append(tag + '\t' + path + '\t' + search + '\n')
+                elif GRAMMAR_REGEX.match(line):
+                    tag, _ = line.split('→')
+                    tag = tag.lstrip('*> ').rstrip('* ')
+                    search = '/*' + tag.replace('/', '\\/') + '* →/'
+                    tags.append(tag + '\t' + path + '\t' + search + '\n')
+
+tags.sort()
+with open('tags', 'w', encoding='utf8') as tags_file:
+    tags_file.writelines(tags)
