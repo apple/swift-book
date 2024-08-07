@@ -38,6 +38,7 @@
 - <doc:OptionalChaining>
 - <doc:ErrorHandling>
 - <doc:Concurrency>
+- <doc:Distributed>
 - <doc:Macros>
 - <doc:TypeCasting>
 - <doc:NestedTypes>
