@@ -116,13 +116,73 @@ A raw identifier can contain any Unicode scalar value except the following:
 
 - Backtick (`` ` ``)
 - Backslash (`\`)
-- Line feed (U+000A)
-- Carriage return (U+000D)
 - Null (U+0000)
-- Other control characters (U+0001--U+001F, U+007F)
+- Horizontal tab (U+0009)
+- Line feed (U+000A)
+- Vertical tab (U+000B)
+- Carriage return (U+000D)
+- Next line (U+0085)
+- Nonbreaking space(U+00A0)
+- Ogham space mark (U+1680)
+- En quad (U+2000)
+- Em quad (U+2001)
+- En space (U+2002)
+- Em space (U+2003)
+- Three-per-em space (U+2004)
+- Four-per-em space (U+2005)
+- Six-per-em space (U+2006)
+- Figure space (U+2007)
+- Punctuation space (U+2008)
+- Thin space (U+2009)
+- Hair space (U+200A)
+- Line separator (U+2028)
+- Paragraph separator (U+2029)
+- Narrow nonbreaking space(U+202F)
+- Medium mathematical space (U+205F)
+- Ideographic space (U+3000)
+
+<!--
+The list above expands the rule that
+a raw identifier can include any Unicode scalar
+except for scalars that have the Pattern_White_Space property,
+except for space (U+0020),
+left-to-right mark (U+200E),
+and right-to-left mark (U+200F).
+Characters that have the White_Space property
+and aren't allowed by the previous rule
+are also prohibited.
+This approach avoids nested negation
+and avoids discussing whitespace characters
+with a different definition of whitespace
+from what's in Whitespace and Comments above.
+
+0009..000D    ; Pattern_White_Space # Cc   [5] <control-0009>..<control-000D>
+0020          ; Pattern_White_Space # Zs       SPACE
+0085          ; Pattern_White_Space # Cc       <control-0085>
+200E..200F    ; Pattern_White_Space # Cf   [2] LEFT-TO-RIGHT MARK..RIGHT-TO-LEFT MARK
+2028          ; Pattern_White_Space # Zl       LINE SEPARATOR
+2029          ; Pattern_White_Space # Zp       PARAGRAPH SEPARATOR
+
+0009..000D    ; White_Space # Cc   [5] <control-0009>..<control-000D>
+0020          ; White_Space # Zs       SPACE
+0085          ; White_Space # Cc       <control-0085>
+00A0          ; White_Space # Zs       NO-BREAK SPACE
+1680          ; White_Space # Zs       OGHAM SPACE MARK
+2000..200A    ; White_Space # Zs  [11] EN QUAD..HAIR SPACE
+2028          ; White_Space # Zl       LINE SEPARATOR
+2029          ; White_Space # Zp       PARAGRAPH SEPARATOR
+202F          ; White_Space # Zs       NARROW NO-BREAK SPACE
+205F          ; White_Space # Zs       MEDIUM MATHEMATICAL SPACE
+3000          ; White_Space # Zs       IDEOGRAPHIC SPACE
+
+From https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt
+-->
 
 Raw identifiers can contain whitespace,
 but can't consist of only whitespace.
+In a raw identifier,
+a left-to-right mark (U+200E) or right-to-left mark (U+200F)
+is allowed and considered whitespace.
 Raw identifiers can contain operator characters,
 as described in <doc:LexicalStructure#Operators>,
 but can't consist of only operator characters.
