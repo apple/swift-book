@@ -122,7 +122,7 @@ A raw identifier can contain any Unicode scalar value except the following:
 - Vertical tab (U+000B)
 - Carriage return (U+000D)
 - Next line (U+0085)
-- Nonbreaking space(U+00A0)
+- Nonbreaking space (U+00A0)
 - Ogham space mark (U+1680)
 - En quad (U+2000)
 - Em quad (U+2001)
@@ -137,7 +137,7 @@ A raw identifier can contain any Unicode scalar value except the following:
 - Hair space (U+200A)
 - Line separator (U+2028)
 - Paragraph separator (U+2029)
-- Narrow nonbreaking space(U+202F)
+- Narrow nonbreaking space (U+202F)
 - Medium mathematical space (U+205F)
 - Ideographic space (U+3000)
 
