@@ -142,19 +142,23 @@ A raw identifier can contain any Unicode scalar value except the following:
 - Ideographic space (U+3000)
 
 <!--
-The list above expands the rule that
-a raw identifier can include any Unicode scalar
-except for scalars that have the Pattern_White_Space property,
-except for space (U+0020),
-left-to-right mark (U+200E),
-and right-to-left mark (U+200F).
-Characters that have the White_Space property
-and aren't allowed by the previous rule
-are also prohibited.
-This approach avoids nested negation
-and avoids discussing whitespace characters
-with a different definition of whitespace
-from what's in Whitespace and Comments above.
+The list above states the rules from SE-0451 without nested negation.
+The acceptance revision (https://forums.swift.org/t/76387)
+lists the rules as follows:
+
+>>>
+The only whitespace that should be permitted in a raw identifier is
+`Pattern_White_Space` (which is stable), minus line/paragraph separators, and
+minus any already forbidden ASCII characters (like U+0009). That leaves
+{U+0020, U+200E, U+200F}.
+
+All other `White_Space` not in the set above, as defined in the Unicode 16.0.0
+standard, should be forbidden.
+>>>
+
+The list above also avoids discussing whitespace characters
+using a different definition of whitespace
+from what's in the Whitespace and Comments section above.
 
 0009..000D    ; Pattern_White_Space # Cc   [5] <control-0009>..<control-000D>
 0020          ; Pattern_White_Space # Zs       SPACE
