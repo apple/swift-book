@@ -309,6 +309,228 @@ the `copy` operator becomes the only way
 to duplicate a value at all,
 and only types that support copying allow it.
 
+## Noncopyable Types
+
+A `CoatCheckTicket` is supposed to represent
+the sole claim to one specific coat.
+But nothing about the structure from the previous section
+actually enforces that ---
+if Swift let you copy a ticket freely,
+two different people could each hand over a copy
+and both expect to walk out with the same coat.
+For a type like this,
+copying isn't just unnecessary, it's actively wrong.
+
+Swift lets you rule it out entirely
+by writing `~Copyable` after the type's name,
+the same place you'd list a protocol it conforms to:
+
+```swift
+struct CoatCheckTicket: ~Copyable {
+    let claimNumber: Int
+}
+```
+
+<!--
+  - test: `ownership-noncopyable`
+
+  ```swifttest
+  -> struct CoatCheckTicket: ~Copyable {
+         let claimNumber: Int
+     }
+  ```
+-->
+
+The tilde (`~`) reads as *without* ---
+`~Copyable` means this type comes without the usual Copyable conformance
+that almost every other type in Swift has implicitly.
+<doc:Ownership#Noncopyable-Types-in-Generic-Code>
+says more about why that conformance is implicit in the first place.
+
+Once `CoatCheckTicket` is noncopyable,
+Swift enforces the single-claim rule for you.
+Assigning a ticket to a new constant doesn't copy it, it *moves* it,
+transferring ownership away from the original constant:
+
+```swift
+func run() {
+    let ticket = CoatCheckTicket(claimNumber: 42)
+    let other = ticket
+    print(ticket.claimNumber)
+    print(other.claimNumber)
+}
+run()
+// Error: 'ticket' used after consume.
+```
+
+<!--
+  - test: `ownership-noncopyable-err`
+
+  ```swifttest
+  -> struct CoatCheckTicket: ~Copyable {
+         let claimNumber: Int
+     }
+  -> func run() {
+         let ticket = CoatCheckTicket(claimNumber: 42)
+         let other = ticket
+         print(ticket.claimNumber)
+         print(other.claimNumber)
+     }
+  -> run()
+  !$ error: 'ticket' used after consume
+  !! let ticket = CoatCheckTicket(claimNumber: 42)
+  !!     ^
+  !$ note: consumed here
+  !! let other = ticket
+  !!             ^
+  !$ note: used here
+  !! print(ticket.claimNumber)
+  !!       ^
+  ```
+-->
+
+The move to `other` consumes `ticket`,
+so the line that prints `ticket.claimNumber` afterward is an error ---
+at that point in the code, `ticket` no longer has a value.
+This is also why, as you saw in the previous section,
+a parameter of a noncopyable type
+can't leave off the `borrowing` or `consuming` modifier:
+Swift needs to know which convention applies
+because there's no implicit copy to fall back on
+if it guesses wrong.
+
+Because a noncopyable value's lifetime is so precisely tracked,
+these types can safely take on responsibilities
+that go beyond what an ordinary structure can do.
+In particular, a noncopyable structure or enumeration can declare a `deinit`,
+the same kind of cleanup method you saw for classes in <doc:Deinitialization>.
+Swift runs it automatically, exactly once,
+at the point where a value's lifetime ends:
+
+```swift
+struct CoatCheckTicket: ~Copyable {
+    let claimNumber: Int
+
+    deinit {
+        print("Filing ticket #\(claimNumber) in the used-ticket bin.")
+    }
+}
+
+func run() {
+    let ticket = CoatCheckTicket(claimNumber: 7)
+    print("Holding ticket #\(ticket.claimNumber).")
+}
+run()
+// Prints "Holding ticket #7."
+// Prints "Filing ticket #7 in the used-ticket bin."
+```
+
+<!--
+  - test: `ownership-noncopyable-deinit`
+
+  ```swifttest
+  -> struct CoatCheckTicket: ~Copyable {
+         let claimNumber: Int
+
+         deinit {
+             print("Filing ticket #\(claimNumber) in the used-ticket bin.")
+         }
+     }
+
+  -> func run() {
+         let ticket = CoatCheckTicket(claimNumber: 7)
+         print("Holding ticket #\(ticket.claimNumber).")
+     }
+  -> run()
+  <- Holding ticket #7.
+  <- Filing ticket #7 in the used-ticket bin.
+  ```
+-->
+
+The ticket's `deinit` runs as soon as `run()` returns,
+because that's where `ticket`'s lifetime ends.
+
+Sometimes a consuming method already does the work that `deinit` would do,
+and running `deinit` afterward would repeat it.
+For a case like that,
+use `discard self` inside a `consuming` method
+to end the value's lifetime without running its `deinit`:
+
+```swift
+struct CoatCheckTicket: ~Copyable {
+    let claimNumber: Int
+
+    deinit {
+        print("Filing ticket #\(claimNumber) in the used-ticket bin.")
+    }
+
+    consuming func redeemed() -> Int {
+        let number = claimNumber
+        print("Filing ticket #\(number) in the used-ticket bin.")
+        discard self
+        return number
+    }
+}
+
+func run() {
+    let ticket = CoatCheckTicket(claimNumber: 42)
+    let number = ticket.redeemed()
+    print("Coat retrieved for ticket #\(number).")
+}
+run()
+// Prints "Filing ticket #42 in the used-ticket bin."
+// Prints "Coat retrieved for ticket #42."
+```
+
+<!--
+  - test: `ownership-noncopyable-discard`
+
+  ```swifttest
+  -> struct CoatCheckTicket: ~Copyable {
+         let claimNumber: Int
+
+         deinit {
+             print("Filing ticket #\(claimNumber) in the used-ticket bin.")
+         }
+
+         consuming func redeemed() -> Int {
+             let number = claimNumber
+             print("Filing ticket #\(number) in the used-ticket bin.")
+             discard self
+             return number
+         }
+     }
+
+  -> func run() {
+         let ticket = CoatCheckTicket(claimNumber: 42)
+         let number = ticket.redeemed()
+         print("Coat retrieved for ticket #\(number).")
+     }
+  -> run()
+  <- Filing ticket #42 in the used-ticket bin.
+  <- Coat retrieved for ticket #42.
+  ```
+-->
+
+Because `redeemed()` already files the stub itself,
+`discard self` tells Swift to skip the `deinit`
+instead of filing the same stub a second time.
+Discarding is deliberately narrow:
+You can use it only within the module that declares the type,
+and only when every stored property is trivial to dispose of on its own,
+which keeps `discard self` from becoming a way to silently skip
+cleanup that the compiler can't verify is safe to drop.
+
+A noncopyable type comes with real restrictions, at least for now.
+A `CoatCheckTicket` can't conform to most protocols yet
+--- `Sendable` is the current exception ---
+and it can't be stored in an `Array`,
+passed as a type argument to most generic functions,
+or wrapped in an `Optional`,
+because those all assume their contents are copyable.
+The next two sections show how Swift lifts exactly those restrictions,
+for code that opts in to supporting noncopyable values.
+
 <!--
 This source file is part of the Swift.org open source project
 
