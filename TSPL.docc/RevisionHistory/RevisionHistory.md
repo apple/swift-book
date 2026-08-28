@@ -2,6 +2,17 @@
 
 Review the recent changes to this book.
 
+**2026-08-28**
+
+- Added the <doc:Ownership> chapter,
+  with sections about borrowing and consuming parameters,
+  noncopyable structures and enumerations,
+  using noncopyable types in generic code,
+  noncopyable values in optionals,
+  and nonescapable types.
+- Added information to the <doc:Expressions#Key-Path-Expression> section
+  about forming a key path to a type's static members.
+
 **2026-07-06**
 
 - Updated for Swift 6.4.

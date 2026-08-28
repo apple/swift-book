@@ -714,10 +714,21 @@ The coat check counter isn't always holding a ticket ---
 sometimes nobody's there yet.
 You can represent that with `Optional`,
 the same way you would for any other type,
-even though `CoatCheckTicket` is noncopyable:
+even though `CoatCheckTicket` is noncopyable.
+Optional binding and `nil` checks work the way you'd expect:
 
 ```swift
-var maybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 9)
+func run() {
+    var maybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 9)
+    if let ticket = maybeTicket {
+        print("Have ticket #\(ticket.claimNumber).")
+    }
+    maybeTicket = nil
+    print(maybeTicket == nil)
+}
+run()
+// Prints "Have ticket #9."
+// Prints "true"
 ```
 
 <!--
@@ -727,32 +738,16 @@ var maybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 9)
   -> struct CoatCheckTicket: ~Copyable {
          let claimNumber: Int
      }
-  -> var maybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 9)
-  ```
--->
-
-Optional binding and `nil` checks work the way you'd expect:
-
-```swift
-if let ticket = maybeTicket {
-    print("Have ticket #\(ticket.claimNumber).")
-}
-maybeTicket = nil
-print(maybeTicket == nil)
-// Prints "Have ticket #9."
-// Prints "true"
-```
-
-<!--
-  - test: `ownership-optional`
-
-  ```swifttest
-  -> if let ticket = maybeTicket {
-         print("Have ticket #\(ticket.claimNumber).")
+  -> func run() {
+         var maybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 9)
+         if let ticket = maybeTicket {
+             print("Have ticket #\(ticket.claimNumber).")
+         }
+         maybeTicket = nil
+         print(maybeTicket == nil)
      }
+  -> run()
   <- Have ticket #9.
-  -> maybeTicket = nil
-  -> print(maybeTicket == nil)
   <- true
   ```
 -->
@@ -767,11 +762,14 @@ the same as any other consuming use
 of a noncopyable value:
 
 ```swift
-var anotherMaybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 3)
-if let ticket = anotherMaybeTicket {
-    print("Have ticket #\(ticket.claimNumber).")
+func run() {
+    var anotherMaybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 3)
+    if let ticket = anotherMaybeTicket {
+        print("Have ticket #\(ticket.claimNumber).")
+    }
+    print(anotherMaybeTicket == nil)
 }
-print(anotherMaybeTicket == nil)
+run()
 // Error: 'anotherMaybeTicket' used after consume.
 ```
 
@@ -782,16 +780,19 @@ print(anotherMaybeTicket == nil)
   -> struct CoatCheckTicket: ~Copyable {
          let claimNumber: Int
      }
-  -> var anotherMaybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 3)
+  -> func run() {
+         var anotherMaybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 3)
   !$ error: 'anotherMaybeTicket' used after consume
   !! var anotherMaybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 3)
   !! ^
-  -> if let ticket = anotherMaybeTicket {
-         print("Have ticket #\(ticket.claimNumber).")
-     }
+         if let ticket = anotherMaybeTicket {
+             print("Have ticket #\(ticket.claimNumber).")
+         }
   !! ^ note: consumed here
-  -> print(anotherMaybeTicket == nil)
+         print(anotherMaybeTicket == nil)
   !! ^ note: used here
+     }
+  -> run()
   ```
 -->
 
