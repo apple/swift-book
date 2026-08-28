@@ -2037,13 +2037,15 @@ For details about when generic code
 includes an implicit constraint to a given protocol,
 see the reference for that protocol.
 
+> Note: For a walkthrough of suppressing `Copyable` on a generic type
+> you define yourself,
+> including how conditional conformance restores it
+> when the type's contents happen to be copyable,
+> see <doc:Ownership#Noncopyable-Types-in-Generic-Code>.
+
 <!--
   TODO: Generic Enumerations
   --------------------------
--->
-
-<!--
-  TODO: Describe how Optional<Wrapped> works
 -->
 
 <!--

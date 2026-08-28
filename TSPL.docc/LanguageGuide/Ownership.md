@@ -531,6 +531,183 @@ because those all assume their contents are copyable.
 The next two sections show how Swift lifts exactly those restrictions,
 for code that opts in to supporting noncopyable values.
 
+## Noncopyable Types in Generic Code
+
+Suppose the coat check counter also has a row of numbered lockers,
+each one able to hold exactly one item.
+Written generically,
+a locker doesn't need to know what it's holding ---
+it could be a `CoatCheckTicket`,
+or it could be something else entirely:
+
+```swift
+struct Locker<Item> {
+    var item: Item
+}
+```
+
+<!--
+  - test: `ownership-generics-err`
+
+  ```swifttest
+  -> struct Locker<Item> {
+         var item: Item
+     }
+  ```
+-->
+
+Trying to put a `CoatCheckTicket` in a locker like this one doesn't work:
+
+```swift
+func run() {
+    let locker = Locker(item: CoatCheckTicket(claimNumber: 1))
+    print(locker.item.claimNumber)
+}
+run()
+// Error: Generic struct 'Locker' requires that
+// 'CoatCheckTicket' conform to 'Copyable'.
+```
+
+<!--
+  - test: `ownership-generics-err`
+
+  ```swifttest
+  -> struct CoatCheckTicket: ~Copyable {
+         let claimNumber: Int
+     }
+  -> func run() {
+         let locker = Locker(item: CoatCheckTicket(claimNumber: 1))
+         print(locker.item.claimNumber)
+     }
+  -> run()
+  !$ error: generic struct 'Locker' requires that 'CoatCheckTicket' conform to 'Copyable'
+  !! let locker = Locker(item: CoatCheckTicket(claimNumber: 1))
+  !!              ^
+  ```
+-->
+
+The error happens because every generic parameter you write ---
+`Item`, in this case ---
+implicitly requires conformance to `Copyable`,
+the same way it implicitly requires conformance to a few other
+common protocols.
+<doc:Generics#Implicit-Constraints> covers this in more detail,
+including how to read and write the suppression syntax
+that lifts an implicit constraint.
+Applied to `Locker`,
+suppressing the implicit `Copyable` constraint on `Item`
+looks like this:
+
+```swift
+struct Locker<Item: ~Copyable>: ~Copyable {
+    var item: Item
+}
+```
+
+<!--
+  - test: `ownership-generics`
+
+  ```swifttest
+  -> struct CoatCheckTicket: ~Copyable {
+         let claimNumber: Int
+     }
+  -> struct Locker<Item: ~Copyable>: ~Copyable {
+         var item: Item
+     }
+  -> func run() {
+         let locker = Locker(item: CoatCheckTicket(claimNumber: 1))
+         print(locker.item.claimNumber)
+     }
+  -> run()
+  <- 1
+  ```
+-->
+
+Notice that `Locker` itself also has to suppress `Copyable`.
+That's because a structure that stores a noncopyable value
+can't offer a meaningful copy of itself either ---
+copying the locker would require copying whatever item is inside it,
+and there's no way to do that in general.
+As with any noncopyable type,
+suppressing `Copyable` on `Locker` is only the default;
+if the type it's holding happens to be copyable,
+you can restore `Locker`'s own copyability for just that case,
+using a conditional conformance
+of the kind you saw in <doc:Generics#Extensions-with-a-Generic-Where-Clause>:
+
+```swift
+extension Locker: Copyable where Item: Copyable {}
+```
+
+<!--
+  - test: `ownership-generics-conditional`
+
+  ```swifttest
+  -> struct Locker<Item: ~Copyable>: ~Copyable {
+         var item: Item
+     }
+  -> extension Locker: Copyable where Item: Copyable {}
+  -> func run() {
+         let numberLocker = Locker(item: 42)
+         let anotherLocker = numberLocker
+         print(numberLocker.item, anotherLocker.item)
+     }
+  -> run()
+  <- 42 42
+  ```
+-->
+
+Protocols suppress their inherited `Copyable` requirement
+the same way types do,
+which is what makes it possible for a noncopyable type
+to conform to a protocol at all.
+Recall from earlier that `CoatCheckTicket` couldn't conform to
+ordinary protocols yet.
+A protocol that's written to accept noncopyable conformers
+lifts that restriction:
+
+```swift
+protocol Claimable: ~Copyable {
+    consuming func redeemed() -> Int
+}
+
+extension CoatCheckTicket: Claimable {
+    consuming func redeemed() -> Int {
+        claimNumber
+    }
+}
+```
+
+<!--
+  - test: `ownership-generics-protocol`
+
+  ```swifttest
+  -> struct CoatCheckTicket: ~Copyable {
+         let claimNumber: Int
+     }
+  -> protocol Claimable: ~Copyable {
+         consuming func redeemed() -> Int
+     }
+
+  -> extension CoatCheckTicket: Claimable {
+         consuming func redeemed() -> Int {
+             claimNumber
+         }
+     }
+  -> func run() {
+         let ticket = CoatCheckTicket(claimNumber: 5)
+         print(ticket.redeemed())
+     }
+  -> run()
+  <- 5
+  ```
+-->
+
+Without `~Copyable` in `Claimable`'s declaration,
+every type conforming to it would implicitly need to be copyable,
+which would rule out `CoatCheckTicket` before you even wrote
+its `redeemed()` method.
+
 <!--
 This source file is part of the Swift.org open source project
 
