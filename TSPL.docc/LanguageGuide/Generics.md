@@ -2042,6 +2042,13 @@ see the reference for that protocol.
 > including how conditional conformance restores it
 > when the type's contents happen to be copyable,
 > see <doc:Ownership#Noncopyable-Types-in-Generic-Code>.
+>
+> `Optional` is one example of a generic type from the standard library
+> that suppresses `Copyable` on its wrapped type,
+> so you can write `SomeNoncopyableType?` the same way
+> you'd write any other optional.
+> For more information,
+> see <doc:Ownership#Noncopyable-Values-in-Optionals>.
 
 <!--
   TODO: Generic Enumerations

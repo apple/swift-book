@@ -708,6 +708,110 @@ every type conforming to it would implicitly need to be copyable,
 which would rule out `CoatCheckTicket` before you even wrote
 its `redeemed()` method.
 
+## Noncopyable Values in Optionals
+
+The coat check counter isn't always holding a ticket ---
+sometimes nobody's there yet.
+You can represent that with `Optional`,
+the same way you would for any other type,
+even though `CoatCheckTicket` is noncopyable:
+
+```swift
+var maybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 9)
+```
+
+<!--
+  - test: `ownership-optional`
+
+  ```swifttest
+  -> struct CoatCheckTicket: ~Copyable {
+         let claimNumber: Int
+     }
+  -> var maybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 9)
+  ```
+-->
+
+Optional binding and `nil` checks work the way you'd expect:
+
+```swift
+if let ticket = maybeTicket {
+    print("Have ticket #\(ticket.claimNumber).")
+}
+maybeTicket = nil
+print(maybeTicket == nil)
+// Prints "Have ticket #9."
+// Prints "true"
+```
+
+<!--
+  - test: `ownership-optional`
+
+  ```swifttest
+  -> if let ticket = maybeTicket {
+         print("Have ticket #\(ticket.claimNumber).")
+     }
+  <- Have ticket #9.
+  -> maybeTicket = nil
+  -> print(maybeTicket == nil)
+  <- true
+  ```
+-->
+
+There's one difference worth noticing.
+For an ordinary, copyable optional,
+`if let ticket = maybeTicket` copies the wrapped value out,
+leaving `maybeTicket` untouched.
+For a noncopyable optional, there's no implicit copy to make,
+so unwrapping it this way *consumes* it,
+the same as any other consuming use
+of a noncopyable value:
+
+```swift
+var anotherMaybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 3)
+if let ticket = anotherMaybeTicket {
+    print("Have ticket #\(ticket.claimNumber).")
+}
+print(anotherMaybeTicket == nil)
+// Error: 'anotherMaybeTicket' used after consume.
+```
+
+<!--
+  - test: `ownership-optional-err`
+
+  ```swifttest
+  -> struct CoatCheckTicket: ~Copyable {
+         let claimNumber: Int
+     }
+  -> var anotherMaybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 3)
+  !$ error: 'anotherMaybeTicket' used after consume
+  !! var anotherMaybeTicket: CoatCheckTicket? = CoatCheckTicket(claimNumber: 3)
+  !! ^
+  -> if let ticket = anotherMaybeTicket {
+         print("Have ticket #\(ticket.claimNumber).")
+     }
+  !! ^ note: consumed here
+  -> print(anotherMaybeTicket == nil)
+  !! ^ note: used here
+  ```
+-->
+
+After the `if let`, `anotherMaybeTicket` no longer has a value at all ---
+not even `nil` --- so reading it again is an error,
+the same as it would be for any other consumed value.
+`switch` with `.some(_)` and `.none` patterns
+follows the same rule, for the same reason.
+If you need to look at a noncopyable optional's payload
+without giving it up,
+the standard library adds
+a `ref` property for a borrowed look
+and a `mutableRef` property for a mutable one,
+so you don't have to restructure your code
+around consuming the optional just to peek inside it.
+As of Swift 6.4,
+these additions are newer than the rest of this chapter's material,
+so check the standard library's `Optional` documentation
+for their exact availability.
+
 <!--
 This source file is part of the Swift.org open source project
 
