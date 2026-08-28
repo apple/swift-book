@@ -977,6 +977,36 @@ and writing one yourself requires
 *lifetime dependency annotations*,
 a related, still-experimental feature that isn't covered in this chapter.
 
+## Looking Ahead: Yielding Accessors
+
+Throughout this chapter,
+borrowing and consuming have applied to parameters and to `self` ---
+but a computed property still goes through `get` and `set`,
+each of which hands you a fresh copy of the value
+on the way in or out.
+For a property that's read or written often,
+or one whose type is noncopyable,
+those copies can be wasteful, or simply impossible.
+
+A proposal working its way through Swift Evolution
+describes a way to avoid them.
+It adds new kinds of accessor,
+tentatively spelled `yielding borrow` and `yielding mutate`,
+that lend a property's value directly to the caller
+instead of copying it through `get` and `set`.
+The idea is similar to the `read` and `modify` accessors
+that some Swift code already relies on internally,
+exposed instead as ordinary syntax you can write yourself.
+
+> Note: As of Swift 6.4,
+> this syntax isn't implemented in any released compiler,
+> including development snapshots.
+> This section describes the shape of the proposal,
+> not a feature you can use today.
+> If it's accepted and implemented,
+> a future edition of this chapter will cover it properly,
+> with the same kind of worked examples as everything above.
+
 <!--
 This source file is part of the Swift.org open source project
 
