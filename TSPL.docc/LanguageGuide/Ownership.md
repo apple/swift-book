@@ -812,6 +812,171 @@ these additions are newer than the rest of this chapter's material,
 so check the standard library's `Optional` documentation
 for their exact availability.
 
+## Nonescapable Types
+
+Recall the library book from the beginning of this chapter,
+and imagine a stricter library that keeps its rarest books
+in a reading room:
+You can borrow one and read it at a table,
+but you can't carry it out into the hallway,
+and you can't hand it to a friend to look at
+after you've left.
+Whatever you learn from the book can leave the room with you,
+but the book itself can't.
+
+Swift's *nonescapable* types work the same way.
+A nonescapable value can be passed around and read
+for as long as the scope that created it is still active,
+but it can't be returned from a function,
+stored somewhere longer-lived,
+or captured by a closure that outlives its creating scope.
+Suppose the coat check counter keeps its claim numbers
+in a plain array,
+and you want to hand a helper function a temporary,
+read-only view into that array,
+without copying the whole array
+or handing over ownership of it.
+The standard library's `Span` type,
+introduced alongside nonescapable types,
+is built for exactly that:
+
+```swift
+let claimNumbers = [9, 12, 27, 41]
+let numbersView = claimNumbers.span
+```
+
+<!--
+  - test: `ownership-nonescapable`
+
+  ```swifttest
+  -> let claimNumbers = [9, 12, 27, 41]
+  -> let numbersView = claimNumbers.span
+  ```
+-->
+
+A `Span<Element>` doesn't own the elements it lets you read;
+it borrows them directly from `claimNumbers`'s storage,
+without copying them.
+You can pass it to a function the same way
+you'd pass any other value:
+
+```swift
+func printFirst(_ numbers: borrowing Span<Int>) {
+    print(numbers[0])
+}
+printFirst(numbersView)
+// Prints "9".
+```
+
+<!--
+  - test: `ownership-nonescapable`
+
+  ```swifttest
+  -> func printFirst(_ numbers: borrowing Span<Int>) {
+         print(numbers[0])
+     }
+  -> printFirst(numbersView)
+  <- 9
+  ```
+-->
+
+Trying to send that view somewhere that outlives `claimNumbers`,
+though, doesn't compile.
+A function can't return it:
+
+```swift
+func firstNumbers(of claimNumbers: [Int]) -> Span<Int> {
+    return claimNumbers.span
+}
+// Error: A function cannot return a ~Escapable result.
+```
+
+<!--
+  - test: `ownership-nonescapable-err-return`
+
+  ```swifttest
+  -> func firstNumbers(of claimNumbers: [Int]) -> Span<Int> {
+         return claimNumbers.span
+     }
+  !$ error: a function cannot return a ~Escapable result
+  !! func firstNumbers(of claimNumbers: [Int]) -> Span<Int> {
+  !!                                              ^
+  ```
+-->
+
+And an escaping closure can't capture it, either:
+
+```swift
+func remember(_ closure: @escaping () -> Void) { }
+
+func run() {
+    let claimNumbers = [9, 12, 27, 41]
+    let numbersView = claimNumbers.span
+    remember {
+        print(numbersView[0])
+    }
+}
+run()
+// Error: Lifetime-dependent variable 'numbersView' escapes its scope.
+```
+
+<!--
+  - test: `ownership-nonescapable-err-closure`
+
+  ```swifttest
+  -> func remember(_ closure: @escaping () -> Void) { }
+
+  -> func run() {
+         let claimNumbers = [9, 12, 27, 41]
+         let numbersView = claimNumbers.span
+         remember {
+             print(numbersView[0])
+         }
+     }
+  -> run()
+  !$ error: lifetime-dependent variable 'numbersView' escapes its scope
+  !! let numbersView = claimNumbers.span
+  !! ^
+  ```
+-->
+
+Both errors come from the same rule:
+`numbersView` depends on `claimNumbers` staying alive and unchanged,
+and Swift can't guarantee that once the view escapes
+the scope where `claimNumbers` lives.
+
+Like `~Copyable`,
+you write `~Escapable` after a type's name
+to suppress its implicit conformance to the `Escapable` protocol,
+which is what makes a type like `Span` possible in the first place.
+You'll use that syntax most often on a protocol,
+to allow nonescapable types to conform to it:
+
+```swift
+protocol Viewable: ~Escapable { }
+```
+
+<!--
+  - test: `ownership-nonescapable-declare`
+
+  ```swifttest
+  -> protocol Viewable: ~Escapable { }
+  ```
+-->
+
+You won't often need to declare a nonescapable structure or enumeration
+of your own ---
+most code encounters nonescapable values ready-made,
+the way `Span` comes from `Array`.
+That's because even an empty structure marked `~Escapable`
+needs an initializer that ties the new value's lifetime
+to some other value it borrows from,
+the way `Span` ties itself to the array it's borrowing from.
+Swift can't synthesize an initializer like that automatically,
+and writing one yourself requires
+*lifetime dependency annotations*,
+a related, still-experimental feature that isn't covered in this chapter.
+
 <!--
 This source file is part of the Swift.org open source project
 

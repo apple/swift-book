@@ -1971,14 +1971,15 @@ is a sequence of integers.
 
 In addition to constraints you write explicitly,
 many places in your generic code also implicitly require
-conformance to some very common protocols like [`Copyable`][].
-<!-- When SE-0446 is implemented, add Escapable above. -->
+conformance to some very common protocols
+like [`Copyable`][] and [`Escapable`][].
 These generic constraints that you don't have to write
 are known as *implicit constraints*.
 For example, both of the following function declarations
 require `MyType` to be copyable:
 
 [`Copyable`]: https://developer.apple.com/documentation/swift/copyable
+[`Escapable`]: https://developer.apple.com/documentation/swift/escapable
 
 ```swift
 function someFunction<MyType> { ... }
@@ -2003,6 +2004,10 @@ You can read `~Copyable` as "maybe copyable" ---
 this suppressed constraint allows
 both copyable and noncopyable types in this position.
 Note that `~Copyable` doesn't *require* the type to be noncopyable.
+`~Escapable` works the same way,
+suppressing the implicit `Escapable` constraint instead ---
+see <doc:Ownership#Nonescapable-Types>
+for an introduction to nonescapable types.
 For example:
 
 ```swift
