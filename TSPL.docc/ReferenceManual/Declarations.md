@@ -1078,12 +1078,10 @@ ownership are correctly managed in all cases.
 These parameter modifiers impact only the relative efficiency
 of particular usage patterns, not correctness.
 
-<!--
-TODO: Describe the default rules.
-Essentially, inits and property setters are consuming,
-and everything else is borrowing.
-Where are copies implicitly inserted?
--->
+> Note: For an introduction to these parameter modifiers,
+> including the default rules Swift uses
+> when you don't write either modifier explicitly,
+> see <doc:Ownership#Borrowing-and-Consuming-Parameters>.
 
 The `borrowing` modifier indicates that the function
 does not keep the parameter's value.

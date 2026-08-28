@@ -1,0 +1,320 @@
+# Ownership
+
+Control how Swift copies, borrows, and consumes your values.
+
+Every value in your program has an owner ---
+the place in your code that's responsible for it.
+When you pass a value to a function,
+return it,
+or store it in a new variable,
+Swift has to decide what happens to that ownership:
+Does the value get copied,
+so the caller and the callee each end up with their own independent copy?
+Does it get *borrowed*,
+so whoever receives it can look at it
+without taking responsibility for it?
+Or does it get *consumed*,
+so responsibility for it moves to whoever receives it,
+and the original owner can't use it anymore?
+
+For most of the code you write,
+you don't have to think about these questions at all.
+As you saw in <doc:ClassesAndStructures#Structures-and-Enumerations-Are-Value-Types>,
+Swift's structures and enumerations are value types:
+Assigning one to a new variable,
+or passing it to a function,
+makes an independent copy.
+That copying is safe and easy to reason about,
+and Swift's compiler is good at optimizing away copies
+that don't actually change your program's behavior.
+Combined with the exclusivity checks described in <doc:MemorySafety>,
+this default gives you memory safety
+without requiring you to manage ownership by hand.
+
+Sometimes, though, copying isn't what you want.
+A value might represent a resource that can't be duplicated meaningfully,
+like a file that's currently open
+or a slot in a fixed-size hardware buffer.
+A value might be expensive to copy,
+and you want precise control over when copies happen,
+for performance-critical code.
+This chapter describes the vocabulary and syntax
+Swift gives you for those situations ---
+*borrowing* and *consuming* parameters,
+*noncopyable* types that opt out of copying entirely,
+and *nonescapable* types whose values can't outlive
+the scope that created them.
+
+## Understanding Ownership
+
+Think about borrowing a book from a library.
+While you have it, you can read it and refer to it,
+but you don't own it:
+You have to give it back,
+and you can't tear out its pages or give it to someone else.
+Swift's *borrowing* convention works the same way.
+Code that borrows a value can read it,
+but the value still belongs to its original owner,
+and the borrowing code has to leave it usable when it's done.
+
+Now think about buying that same book instead.
+Once you own it, you can do anything you want with it,
+including passing your copy along to someone else ---
+at which point you don't have it anymore.
+Swift's *consuming* convention works the same way.
+Code that consumes a value becomes responsible for it,
+and the value's original owner can't use it again afterward.
+
+A third convention, *mutating*,
+lets code temporarily borrow a value
+with permission to change it,
+and then hand it back to its original owner when it's done.
+You've already used this convention
+every time you called a mutating method
+or passed a variable as an in-out parameter ---
+see <doc:MemorySafety> for more information
+about how Swift keeps those accesses safe and exclusive.
+
+Borrowing, consuming, and mutating aren't new concepts ---
+they're names for conventions
+that Swift's compiler already relies on internally
+to decide when to copy a value,
+retain or release a class instance,
+or pass a value by reference.
+The rest of this chapter shows you
+how to make some of those decisions explicit yourself:
+first for the parameters you pass to functions and methods,
+and then for values whose types
+opt out of copying or escaping altogether.
+
+## Borrowing and Consuming Parameters
+
+Consider a theater's coat check counter.
+Every coat gets a ticket,
+and that ticket is what lets you claim your coat later.
+The following structure models a ticket like that:
+
+```swift
+struct CoatCheckTicket {
+    let claimNumber: Int
+}
+```
+
+<!--
+  - test: `ownership-parameters`
+
+  ```swifttest
+  -> struct CoatCheckTicket {
+         let claimNumber: Int
+     }
+  ```
+-->
+
+Whenever you pass a `CoatCheckTicket` to a function,
+Swift has to decide how the function receives it:
+Does the function just look at the ticket,
+or does it take responsibility for it?
+By default, Swift's compiler answers that question for you,
+and it usually picks the most efficient option automatically.
+Most of the time, you don't need to think about this at all ---
+but when you do want control over that decision,
+you can write it explicitly using
+the `borrowing` and `consuming` parameter modifiers,
+in the same position where you'd write `inout`.
+
+The following function only needs to look at a ticket,
+so it marks its parameter `borrowing`:
+
+```swift
+func announce(_ ticket: borrowing CoatCheckTicket) {
+    print("Now serving ticket #\(ticket.claimNumber).")
+}
+```
+
+<!--
+  - test: `ownership-parameters`
+
+  ```swifttest
+  -> func announce(_ ticket: borrowing CoatCheckTicket) {
+         print("Now serving ticket #\(ticket.claimNumber).")
+     }
+  ```
+-->
+
+This function that hands over the coat, on the other hand,
+takes ownership of the ticket it's given ---
+the customer doesn't get to reuse it afterward ---
+so it marks its parameter `consuming`:
+
+```swift
+func redeem(_ ticket: consuming CoatCheckTicket) -> String {
+    return "Coat retrieved for ticket #\(ticket.claimNumber)."
+}
+```
+
+<!--
+  - test: `ownership-parameters`
+
+  ```swifttest
+  -> func redeem(_ ticket: consuming CoatCheckTicket) -> String {
+         return "Coat retrieved for ticket #\(ticket.claimNumber)."
+     }
+  ```
+-->
+
+Both functions work the way you'd expect:
+
+```swift
+let ticket = CoatCheckTicket(claimNumber: 42)
+announce(ticket)
+print(redeem(ticket))
+// Prints "Now serving ticket #42."
+// Prints "Coat retrieved for ticket #42."
+```
+
+<!--
+  - test: `ownership-parameters`
+
+  ```swifttest
+  -> let ticket = CoatCheckTicket(claimNumber: 42)
+  -> announce(ticket)
+  -> print(redeem(ticket))
+  <- Now serving ticket #42.
+  <- Coat retrieved for ticket #42.
+  ```
+-->
+
+Because `CoatCheckTicket` is an ordinary, copyable structure,
+this example behaves the same with or without the modifiers ---
+`redeem(_:)` simply receives a copy of `ticket`,
+and the original `ticket` constant is still valid afterward.
+Writing `borrowing` and `consuming` explicitly doesn't change
+what the code is allowed to do here;
+it changes how the compiler passes the value,
+which can matter for performance
+when a type is expensive to copy.
+Later in this chapter,
+in <doc:Ownership#Noncopyable-Types>,
+you'll see types where this distinction
+also changes what's allowed.
+
+Both modifiers apply to methods the same way they apply to functions,
+except that they describe how a method receives `self`
+instead of an ordinary parameter:
+
+```swift
+extension CoatCheckTicket {
+    borrowing func announce() {
+        print("Now serving ticket #\(claimNumber).")
+    }
+
+    consuming func redeemed() -> String {
+        "Coat retrieved for ticket #\(claimNumber)."
+    }
+}
+```
+
+<!--
+  - test: `ownership-parameters`
+
+  ```swifttest
+  -> extension CoatCheckTicket {
+         borrowing func announce() {
+             print("Now serving ticket #\(claimNumber).")
+         }
+
+         consuming func redeemed() -> String {
+             "Coat retrieved for ticket #\(claimNumber)."
+         }
+     }
+  ```
+-->
+
+In fact, Swift already chooses one of these two conventions
+for every function, method, and initializer you write,
+whether or not you write the modifier yourself.
+Initializers and property setters default to `consuming`,
+because their entire job is to take a value
+and store it somewhere new.
+Nearly everything else ---
+ordinary functions, methods, and computed-property getters ---
+defaults to `borrowing`,
+because reading a value without taking ownership of it
+is normally cheaper.
+Writing the modifier explicitly doesn't usually change your program's behavior;
+it documents your intent,
+and it becomes required, rather than optional,
+for the noncopyable types you'll meet later in this chapter.
+
+### Making Explicit Copies
+
+Because a `borrowing` parameter doesn't own its value,
+Swift limits what you can do with it:
+You can read it as many times as you like,
+but you can't consume it more than once.
+The following function tries to return its ticket in two places,
+which means consuming it twice:
+
+```swift
+func duplicate(_ ticket: borrowing CoatCheckTicket) -> (CoatCheckTicket, CoatCheckTicket) {
+    return (ticket, ticket)
+}
+// Error: 'ticket' consumed more than once.
+```
+
+<!--
+  - test: `ownership-parameters-err`
+
+  ```swifttest
+  -> func duplicate(_ ticket: borrowing CoatCheckTicket) -> (CoatCheckTicket, CoatCheckTicket) {
+         return (ticket, ticket)
+     }
+  !$ error: 'ticket' consumed more than once
+  !! func duplicate(_ ticket: borrowing CoatCheckTicket) -> (CoatCheckTicket, CoatCheckTicket) {
+  !!                  ^
+  !$ note: multiple consumes here
+  !! return (ticket, ticket)
+  !! ^
+  ```
+-->
+
+When you actually do want a copy,
+you have to ask for it,
+using the `copy` operator:
+
+```swift
+func duplicate(_ ticket: borrowing CoatCheckTicket) -> (CoatCheckTicket, CoatCheckTicket) {
+    return (copy ticket, copy ticket)
+}
+```
+
+<!--
+  - test: `ownership-parameters`
+
+  ```swifttest
+  -> func duplicate(_ ticket: borrowing CoatCheckTicket) -> (CoatCheckTicket, CoatCheckTicket) {
+         return (copy ticket, copy ticket)
+     }
+  ```
+-->
+
+This requirement is easy to miss for an ordinary copyable structure
+like `CoatCheckTicket`,
+because leaving out `borrowing` and `consuming` entirely
+also compiles, and copies just as freely as before.
+It matters most for the noncopyable types
+described later in this chapter,
+where there's no implicit copy to fall back on ---
+the `copy` operator becomes the only way
+to duplicate a value at all,
+and only types that support copying allow it.
+
+<!--
+This source file is part of the Swift.org open source project
+
+Copyright (c) 2014 - 2026 Apple Inc. and the Swift project authors
+Licensed under Apache License v2.0 with Runtime Library Exception
+
+See https://swift.org/LICENSE.txt for license information
+See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
+-->
