@@ -63,6 +63,7 @@ Write safe, fast, expressive code with a modern, general-purpose language.
 - <doc:Attributes>
 - <doc:Patterns>
 - <doc:GenericParametersAndArguments>
+- <doc:DataRaceSafety>
 - <doc:SummaryOfTheGrammar>
 
 <!--
