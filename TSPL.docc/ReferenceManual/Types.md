@@ -514,8 +514,9 @@ see <doc:MemorySafety>.
 > *function-type-argument-clause* → **`(`** *function-type-argument-list* **`...`**_?_ **`)`**
 >
 > *function-type-argument-list* → *function-type-argument* | *function-type-argument* **`,`** *function-type-argument-list* \
-> *function-type-argument* → *attributes*_?_ *parameter-modifier*_?_ *type* | *argument-label* *type-annotation* \
-> *argument-label* → *identifier*
+> *function-type-argument* → *attributes*_?_ *parameter-modifier*_?_ *type* | *external-argument-label*_?_ *local-argument-label* *type-annotation* \
+> *external-argument-label* → *identifier* | **`_`** \
+> *local-argument-label* → *identifier*
 >
 > *throws-clause* → **`throws`** | **`throws`** **`(`** *type* **`)`**
 
