@@ -498,7 +498,7 @@ A boxed protocol type is also sometimes called an *existential type*,
 which comes from the phrase
 "there exists a type *T* such that *T* conforms to the protocol".
 To make a boxed protocol type,
-write `any` before the name of a protocol.
+write `any` before the name of a protocol (or protocol composition).
 Here's an example:
 
 ```swift
@@ -620,6 +620,29 @@ if let downcastTriangle = vertical.shapes[0] as? Triangle {
 ```
 
 For more information, see <doc:TypeCasting#Downcasting>.
+
+### Existential Of Protocol Composition
+
+An existential can also creating by writing `any` before a protocol composition type (see <doc:Protocols#Protocol-Composition>). This creates a box which holds a structure, class or enum that conforms to all the protocols listed.
+
+```
+protocol Named {
+    var name: String { get }
+}
+protocol Aged {
+    var age: Int { get }
+}
+struct Person: Named, Aged {
+    var name: String
+    var age: Int
+}
+struct Dog: Named, Aged {
+    var name: String
+    var age: Int
+    var breed: String
+}
+var family: [any (Name & Aged)]
+```
 
 ## Differences Between Opaque Types and Boxed Protocol Types
 
