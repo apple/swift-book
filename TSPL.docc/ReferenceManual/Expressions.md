@@ -571,25 +571,6 @@ either an ordinary literal (such as a string or a number),
 an array or dictionary literal,
 or a playground literal.
 
-> Note:
-> Prior to Swift 5.9,
-> the following special literals were recognized:
-> `#column`,
-> `#dsohandle`,
-> `#fileID`,
-> `#filePath`,
-> `#file`,
-> `#function`,
-> and `#line`.
-> These are now implemented as macros in the Swift standard library:
-> [`column()`](https://developer.apple.com/documentation/swift/column()),
-> [`dsohandle()`](https://developer.apple.com/documentation/swift/dsohandle()),
-> [`fileID()`](https://developer.apple.com/documentation/swift/fileID()),
-> [`filePath()`](https://developer.apple.com/documentation/swift/filePath()),
-> [`file()`](https://developer.apple.com/documentation/swift/file()),
-> [`function()`](https://developer.apple.com/documentation/swift/function()),
-> and [`line()`](https://developer.apple.com/documentation/swift/line()).
-
 <!--
   - test: `pound-file-flavors`
 

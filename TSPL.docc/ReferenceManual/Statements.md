@@ -1288,17 +1288,32 @@ A line control statement has the following forms:
 #sourceLocation()
 ```
 
-The first form of a line control statement changes the values
-of the `#line`, `#file`, `#fileID`, and `#filePath`
-literal expressions, beginning with the line of code following the line control statement.
+The first form of a line control statement changes the values of
+the `#line`, `#file`, `#fileID`, and `#filePath` freestanding macro expressions,
+beginning with the line of code following the line control statement.
 The *line number* changes the value of `#line`,
 and is any integer literal greater than zero.
 The *file path* changes the value of `#file`, `#fileID`, and `#filePath`,
 and is a string literal.
 The specified string becomes the value of `#filePath`,
 and the last path component of the string is used by the value of `#fileID`.
-For information about `#file`, `#fileID`, and `#filePath`,
-see <doc:Expressions#Literal-Expression>.
+> Note:
+> Prior to Swift 5.9,
+> `#column`,
+> `#dsohandle`,
+> `#fileID`,
+> `#filePath`,
+> `#file`,
+> `#function`,
+> and `#line` were special literals.
+> These are now implemented as macros in the Swift standard library:
+> [`column()`](https://developer.apple.com/documentation/swift/column()),
+> [`dsohandle()`](https://developer.apple.com/documentation/swift/dsohandle()),
+> [`fileID()`](https://developer.apple.com/documentation/swift/fileID()),
+> [`filePath()`](https://developer.apple.com/documentation/swift/filePath()),
+> [`file()`](https://developer.apple.com/documentation/swift/file()),
+> [`function()`](https://developer.apple.com/documentation/swift/function()),
+> and [`line()`](https://developer.apple.com/documentation/swift/line()).
 
 The second form of a line control statement, `#sourceLocation()`,
 resets the source code location back to the default line numbering and file path.
