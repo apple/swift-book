@@ -41,7 +41,7 @@ See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
           <span class="color-scheme-toggle-label">Auto</span>
         </label>
       </form>
-      <aside>
+      <aside class="footer-social-icons">
       <a href="/atom.xml" title="Subscribe to Site Updates"><i class="feed"></i></a>
       <a href="https://twitter.com/swiftlang" rel="nofollow" title="Follow @SwiftLang on Twitter"><i class="twitter"></i></a>
     </aside>
@@ -109,6 +109,13 @@ See https://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
         width: 1px;
         padding: 0;
         border:0
+    }
+
+    .footer-social-icons {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: right;
+      gap: 1rem;
     }
   </style>
   <script type="text/javascript">
