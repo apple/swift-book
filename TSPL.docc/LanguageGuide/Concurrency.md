@@ -1457,8 +1457,8 @@ the part of a program that contains mutable state,
 like variables and properties,
 is called a *concurrency domain*.
 Some kinds of data can't be shared between concurrency domains,
-because that data contains mutable state,
-but it doesn't protect against overlapping access.
+because that data contains mutable state
+that is not protected against overlapping access.
 
 A type that can be shared from one concurrency domain to another
 is known as a *sendable* type.
