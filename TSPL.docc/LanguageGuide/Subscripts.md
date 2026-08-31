@@ -308,7 +308,7 @@ The `grid` array for this `Matrix` instance
 is effectively a flattened version of the matrix,
 as read from top left to bottom right:
 
-![](subscriptMatrix01)
+![Two representations of the "grid" variable. Above, the four 0.0 values form an array. Below, the values are shaped into a 2x2 matrix, with indices 0 and 1 marked outside the matrix.](subscriptMatrix01)
 
 Values in the matrix can be set by passing row and column values into the subscript,
 separated by a comma:
@@ -337,7 +337,7 @@ a value of `1.5` in the top right position of the matrix
 and `3.2` in the bottom left position
 (where `row` is `1` and `column` is `0`):
 
-![](subscriptMatrix02)
+![A 2x2 matrix.  The first row is 0.0 and 1.5; the second row is 3.2 and 0.0.](subscriptMatrix02)
 
 The `Matrix` subscript's getter and setter both contain an assertion
 to check that the subscript's  `row` and `column` values are valid.

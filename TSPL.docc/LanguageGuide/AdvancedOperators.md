@@ -43,7 +43,7 @@ Swift supports all of the bitwise operators found in C, as described below.
 
 The *bitwise NOT operator* (`~`) inverts all bits in a number:
 
-![](bitwiseNOT)
+![The input 00001111, inverted to produce 11110000.](bitwiseNOT)
 
 The bitwise NOT operator is a prefix operator,
 and appears immediately before the value it operates on,
@@ -87,7 +87,7 @@ The *bitwise AND operator* (`&`) combines the bits of two numbers.
 It returns a new number whose bits are set to `1`
 only if the bits were equal to `1` in *both* input numbers:
 
-![](bitwiseAND)
+![The input 11111100, with the first two bits highlighted; the input 00111111, with the last two bits highlighted; and the result 00111100.  The highlighted bits are 1 in only one input, and 0 in the result.](bitwiseAND)
 
 In the example below,
 the values of `firstSixBits` and `lastSixBits`
@@ -118,7 +118,7 @@ The *bitwise OR operator* (`|`) compares the bits of two numbers.
 The operator returns a new number whose bits are set to `1`
 if the bits are equal to `1` in *either* input number:
 
-![](bitwiseOR)
+![The inputs 10110010 and 01011110 produce the result 11111110.](bitwiseOR)
 
 <!-- Apple Books screenshot ends here. -->
 
@@ -152,7 +152,7 @@ The operator returns a new number whose bits are set to `1`
 where the input bits are different
 and are set to `0` where the input bits are the same:
 
-![](bitwiseXOR)
+![The input 0010100, with the fourth and sixth bits highlighted; the input 00000101, with the sixth and eigth bits highlighted; and the result 00010001.  The highlighted bits are 1 in only one input but not both, and 1 in the output.](bitwiseXOR)
 
 In the example below,
 the values of `firstBits` and `otherBits` each have a bit set to `1`
@@ -213,7 +213,7 @@ Green numbers are shifted,
 gray numbers are discarded,
 and pink zeros are inserted:
 
-![](bitshiftUnsigned)
+![A left shift with 11111111 as input; the leftmost 1 is gray and all others are green.  Its result shows 11111110, with a pink 0.  Arrows connect each bit in the input to a bit one to the left in the output. A right shift shows the same operation, but mirrored left-to-right.](bitshiftUnsigned)
 
 Here's how bit shifting looks in Swift code:
 
@@ -324,7 +324,7 @@ Positive numbers are stored in exactly the same way as for unsigned integers,
 counting upwards from `0`.
 Here's how the bits inside an `Int8` look for the number `4`:
 
-![](bitshiftSignedFour)
+![The value 00000100.  The leftmost bit is highlighted as the sign bit, and all other bits are value bits.](bitshiftSignedFour)
 
 The sign bit is `0` (meaning “positive”),
 and the seven value bits are just the number `4`,
@@ -338,12 +338,12 @@ so this means `2` to the power of `7`, or `128`.
 
 Here's how the bits inside an `Int8` look for the number `-4`:
 
-![](bitshiftSignedMinusFour)
+![The value 11111100.  The leftmost bit is highlighted as the sign bit, and all other bits are value bits.](bitshiftSignedMinusFour)
 
 This time, the sign bit is `1` (meaning “negative”),
 and the seven value bits have a binary value of `124` (which is `128 - 4`):
 
-![](bitshiftSignedMinusFourValue)
+![The value 11111100 with all seven bits highlighted as value bits.](bitshiftSignedMinusFourValue)
 
 This encoding for negative numbers is known as a *two's complement* representation.
 It may seem an unusual way to represent negative numbers,
@@ -354,7 +354,7 @@ simply by performing a standard binary addition of all eight bits
 (including the sign bit),
 and discarding anything that doesn't fit in the eight bits once you're done:
 
-![](bitshiftSignedAddition)
+![The values 11111100 for -4 and 11111111 for -1, lined up for addition.  The result is 11111011, representing -5.](bitshiftSignedAddition)
 
 Second, the two's complement representation also lets you
 shift the bits of negative numbers to the left and right like positive numbers,
@@ -366,7 +366,7 @@ apply the same rules as for unsigned integers,
 but fill any empty bits on the left with the *sign bit*,
 rather than with a zero.
 
-![](bitshiftSigned)
+![On the left side, the value 11111111.  Its rightmost digit is grayed out, and discarded when shifting right.  Its leftmost digit is highlighted and duplicated when shifting right.  The result is 11111111.  On the lift side, the input value is 01111111 and the output is 00111111, with the same highlights.](bitshiftSigned)
 
 This action ensures that signed integers have the same sign after they're shifted to the right,
 and is known as an *arithmetic shift*.
@@ -459,7 +459,7 @@ as shown in the diagram below.
 The value that remains within the bounds of the `UInt8`
 after the overflow addition is `00000000`, or zero.
 
-![](overflowAddition)
+![The values 11111111 for 255 and 00000001 for 1, lined up for addition.  Both inputs have an extra 0 bit, out of bounds, to their left.  The result is 00000000, with 1 in the extra bit.](overflowAddition)
 
 Something similar happens when
 an unsigned integer is allowed to overflow in the negative direction.
@@ -491,7 +491,7 @@ If you subtract `1` from `00000000` using the overflow subtraction operator (`&-
 the number will overflow and wrap around to `11111111`,
 or `255` in decimal.
 
-![](overflowUnsignedSubtraction)
+![The values 00000000 and 00000001 for 1, lined up for subtraction.  The result is 11111111 for 255.](overflowUnsignedSubtraction)
 
 Overflow also occurs for signed integers.
 All addition and subtraction for signed integers is performed in bitwise fashion,
@@ -525,7 +525,7 @@ gives a binary value of `01111111`,
 which toggles the sign bit and gives positive `127`,
 the maximum positive value that an `Int8` can hold.
 
-![](overflowSignedSubtraction)
+![The values 10000000 for -128 and 00000001 for 1, lined up for subtraction.  The result is 01111111 for 127.](overflowSignedSubtraction)
 
 For both signed and unsigned integers,
 overflow in the positive direction
@@ -752,7 +752,7 @@ let combinedVector = vector + anotherVector
 This example adds together the vectors `(3.0, 1.0)` and `(2.0, 4.0)`
 to make the vector `(5.0, 5.0)`, as illustrated below.
 
-![](vectorAddition)
+![Three arrows, representing vectors on a coordinate plane.  The first blue arrow starts at the origin, moving right three and up one.  The second blue arrow starts at the blue arrow's end, moving right two and up four.  The green arrow adds together the blue arrows' vectors, starting at the first arrow's start and ending at the second arrow's end, moving right five and up five.](vectorAddition)
 
 ### Prefix and Postfix Operators
 

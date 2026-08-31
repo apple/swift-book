@@ -298,7 +298,7 @@ in <doc:Attributes>.
 When building Swift code that uses macros,
 the compiler calls the macros' implementation to expand them.
 
-![Diagram showing the four steps of expanding macros.  The input is Swift source code.  This becomes a tree, representing the code's structure.  The macro implementation adds branches to the tree.  The result is Swift source with additional code.](macro-expansion-full)
+![A diagram showing the four steps of expanding macros.  The input is Swift source code.  This input becomes a tree, representing the code's structure.  The macro implementation adds branches to the tree.  The result is Swift source with additional code.](macro-expansion-full)
 
 Specifically, Swift expands macros in the following way:
 

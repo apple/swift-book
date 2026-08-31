@@ -311,7 +311,7 @@ This example plays a simple game of *Snakes and Ladders*
 
 <!-- Apple Books screenshot begins here. -->
 
-![](snakesAndLadders)
+![Two views of a 5x5 game board. On the left, ladders go from square 3 to 11, 6 to 17, 9 to 18, and 10 to 12, and snakes go from square 24 to 16, 22 to 20, 19 to 8, and 14 to 4. On the right, a single arrow shows the movement of game pieces back-and-forth on each row, from square 1 to 25.](snakesAndLadders)
 
 The rules of the game are as follows:
 
@@ -1212,7 +1212,7 @@ default:
   ```
 -->
 
-![](coordinateGraphSimple)
+![A coordinate plane, showing the line x=0 in red, y=0 in green, and a 4x4 blue square centered at (0,0).](coordinateGraphSimple)
 
 The `switch` statement determines whether the point is
 at the origin (0, 0),
@@ -1269,7 +1269,7 @@ case let (x, y):
   ```
 -->
 
-![](coordinateGraphMedium)
+![A coordinate plane showing the x axis in red and y axis in green.](coordinateGraphMedium)
 
 The `switch` statement determines whether the point is
 on the red x-axis,
@@ -1332,7 +1332,7 @@ case let (x, y):
   ```
 -->
 
-![](coordinateGraphComplex)
+![A coordinate plane showing the line x=y in green, and the line x=-y in purple.](coordinateGraphComplex)
 
 The `switch` statement determines whether the point is
 on the green diagonal line where `x == y`,
@@ -1827,7 +1827,7 @@ you must roll again until you roll the exact number needed to land on square 25.
 
 The game board is the same as before.
 
-![](snakesAndLadders)
+![Two views of a 5x5 game board. On the left, ladders go from square 3 to 11, 6 to 17, 9 to 18, and 10 to 12, and snakes go from square 24 to 16, 22 to 20, 19 to 8, and 14 to 4. On the right, a single arrow shows the movement of game pieces back-and-forth on each row, from square 1 to 25.](snakesAndLadders)
 
 The values of `finalSquare`, `board`, `square`, and `diceRoll`
 are initialized in the same way as before:
