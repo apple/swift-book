@@ -46,6 +46,7 @@ Write safe, fast, expressive code with a modern, general-purpose language.
 - <doc:Extensions>
 - <doc:Protocols>
 - <doc:Generics>
+- <doc:Ownership>
 - <doc:OpaqueTypes>
 - <doc:AutomaticReferenceCounting>
 - <doc:MemorySafety>
