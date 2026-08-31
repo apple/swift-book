@@ -2028,6 +2028,117 @@ let someTask = toDoList[keyPath: taskKeyPath]
   ```
 -->
 
+By default, a key path's *type name* refers to
+a concrete instance type,
+so its path can only refer to instance properties and subscripts.
+To form a key path to a static property instead,
+include `.Type` after the *type name*:
+
+```swift
+struct Bee {
+    static let name = "honeybee"
+}
+
+let nameKeyPath = \Bee.Type.name
+print(Bee.self[keyPath: nameKeyPath])
+// Prints "honeybee".
+```
+
+<!--
+  - test: `keypath-expression-metatype`
+
+  ```swifttest
+  -> struct Bee {
+         static let name = "honeybee"
+     }
+
+  -> let nameKeyPath = \Bee.Type.name
+  -> print(Bee.self[keyPath: nameKeyPath])
+  <- honeybee
+  ```
+-->
+
+Leaving out `.Type` and writing `\Bee.name` is an error,
+because without it the *path* is understood as
+a reference to an instance member:
+
+```swift
+let nameKeyPath = \Bee.name
+// Error: Static member 'name' cannot be used on instance of type 'Bee'.
+```
+
+<!--
+  - test: `keypath-expression-metatype-err`
+
+  ```swifttest
+  -> struct Bee {
+         static let name = "honeybee"
+     }
+  -> let nameKeyPath = \Bee.name
+  !$ error: static member 'name' cannot be used on instance of type 'Bee'
+  !! let nameKeyPath = \Bee.name
+  !!                        ^
+  ```
+-->
+
+As with an ordinary key path,
+you can omit the *type name* itself
+in a context where type inference can determine it:
+
+```swift
+let inferredNameKeyPath: KeyPath<Bee.Type, String> = \.name
+print(Bee.self[keyPath: inferredNameKeyPath])
+// Prints "honeybee".
+```
+
+<!--
+  - test: `keypath-expression-metatype`
+
+  ```swifttest
+  -> let inferredNameKeyPath: KeyPath<Bee.Type, String> = \.name
+  -> print(Bee.self[keyPath: inferredNameKeyPath])
+  <- honeybee
+  ```
+-->
+
+A key path to a mutable static property
+is always a `ReferenceWritableKeyPath`,
+regardless of whether the type itself is a structure, enumeration, or class,
+because a type's metatype is always a reference type:
+
+```swift
+struct Hive {
+    nonisolated(unsafe) static var beeCount = 0
+}
+
+let beeCountKeyPath = \Hive.Type.beeCount
+Hive.self[keyPath: beeCountKeyPath] = 20_000
+print(Hive.beeCount)
+// Prints "20000".
+```
+
+<!--
+  - test: `keypath-expression-metatype-writable`
+
+  ```swifttest
+  -> struct Hive {
+         nonisolated(unsafe) static var beeCount = 0
+     }
+
+  -> let beeCountKeyPath = \Hive.Type.beeCount
+  -> Hive.self[keyPath: beeCountKeyPath] = 20_000
+  -> print(Hive.beeCount)
+  <- 20000
+  ```
+-->
+
+The `nonisolated(unsafe)` modifier above satisfies Swift's
+data-race safety checks for shared mutable state ---
+see <doc:Concurrency> for more information.
+It isn't specific to key paths;
+an ordinary, non–key-path assignment to `beeCount`
+would need the same modifier.
+
 For more information about using key paths
 in code that interacts with Objective-C APIs,
 see [Using Objective-C Runtime Features in Swift](https://developer.apple.com/documentation/swift/using_objective_c_runtime_features_in_swift).
