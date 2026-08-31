@@ -40,6 +40,7 @@ Write safe, fast, expressive code with a modern, general-purpose language.
 - <doc:OptionalChaining>
 - <doc:ErrorHandling>
 - <doc:Concurrency>
+- <doc:Distributed>
 - <doc:Macros>
 - <doc:TypeCasting>
 - <doc:NestedTypes>

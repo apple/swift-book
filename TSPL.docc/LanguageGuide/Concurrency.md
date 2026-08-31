@@ -1448,6 +1448,83 @@ as described in <doc:Attributes#globalActor>.
        print(await logger.getMax())
 -->
 
+## Distributed Actors
+
+The `Distributed` module,
+included with Swift,
+provides a number of features which can be used
+to make use of Swift actors in distributed systems.
+
+*Distributed actors* are an extension of Swift's actors
+that enable them to be used in distributed systems.
+
+Similar to actors, they make use of actor isolation,
+however unlike them,
+they must assume that a distributed actor
+may actually be located on a different host,
+and therefore are slightly more restrictive in isolation checking
+than plain actors.
+
+An instance of distributed actor type is ---
+at compile time ---
+assumed to be "potentially remote",
+meaning that strong isolation checks are applied to accesses performed on it,
+and only `distributed` methods may be called on it.
+
+### Distributed Actor Isolation
+
+Distributed actors cannot declared `nonisolated` *stored* properties,
+as it is not possible to implement such property
+for the case when such actor is "remote".
+
+Distributed actors can declare `nonisolated` computed properties and functions,
+and those work the same way as they would on normal actors,
+meaning that they cannot access any of the actor's isolated state.
+In the case if a distributed actor,
+this effectively means that they can only access
+the `actorSystem` and `id` synthesized non-isolated properties of the actor,
+or any other nonisolated declarations on the actor.
+
+### Distributed Methods
+
+You may make a normal actor method declaration into a distributed method
+by prefixing the `func` keyword with the `distributed` contextual keyword,
+similar as one prefixes an `actor` to obtain a `distributed actor`.
+
+Only distributed actors are allowed to declare distributed methods,
+and they must be instance methods
+(i.e. `static` distributed methods are not allowed).
+Computed read-only properties may also be distributed,
+and function effectively the same as if
+they were no argument taking distributed methods.
+However, writable computed properties are note allowed.
+
+Distributed methods may be called on distributed actor instances at any time,
+even as (or rather, especially when) the actor is potentially remote.
+
+Distributed method invocations are implicitly asynchronous,
+same as usual actor calls,
+when performed cross actor.
+Unlike plain actor methods,
+they are also implicitly throwing when the potential of
+crossing a network boundary via such call exists, e.g.:
+
+```swift
+let logger: DistributedTemperatureLogger // potentially remote distributed temp. logger
+print(try await logger.max) // a remote call might be made here, thus implicitly throwing and async
+// Prints "25"
+```
+
+Since the `DistributedTemperatureLogger` in this snippet
+is a `distributed actor`
+and we don't know if it is actually local or remote,
+the type-system needs to force us to handle the potential remote call,
+which might throw.
+
+In contrast,
+in code where the distributed actor instance is "known to be local"
+the implicit `throws` effect is not applied.
+
 ## Sendable Types
 
 Tasks and actors let you divide a program

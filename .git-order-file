@@ -37,6 +37,7 @@ TSPL.docc/LanguageGuide/Deinitialization.md
 TSPL.docc/LanguageGuide/OptionalChaining.md
 TSPL.docc/LanguageGuide/ErrorHandling.md
 TSPL.docc/LanguageGuide/Concurrency.md
+TSPL.docc/LanguageGuide/Distributed.md
 TSPL.docc/LanguageGuide/Macros.md
 TSPL.docc/LanguageGuide/TypeCasting.md
 TSPL.docc/LanguageGuide/NestedTypes.md
