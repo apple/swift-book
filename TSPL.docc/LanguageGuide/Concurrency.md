@@ -1067,8 +1067,8 @@ might suspend when you call them.
 This code also shows a common pattern:
 Perform long-running and CPU-intensive work in the background,
 and then switch to the main actor to update the UI.
-Because the `downloadAndShowPhoto(named:)` function isn't on the main actor,
-the work in `downloadPhoto(named:)` also doesn't run on the main actor.
+The `downloadPhoto(named:)` function is non-isolated,
+so it executes in a concurrency domain separate from the main actor.
 Only the work in `show(_:)` to update the UI runs on the main actor,
 because that function is marked with the `@MainActor` attribute.
 <!-- TODO
