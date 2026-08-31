@@ -60,8 +60,8 @@ struct SomeStructure: FirstProtocol, AnotherProtocol {
   - test: `protocolSyntax`
 
   ```swifttest
-  >> protocol FirstProtocol {}
-  >> protocol AnotherProtocol {}
+  >> protocol FirstProtocol { }
+  >> protocol AnotherProtocol { }
   -> struct SomeStructure: FirstProtocol, AnotherProtocol {
         // structure definition goes here
      }
@@ -81,7 +81,7 @@ class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
   - test: `protocolSyntax`
 
   ```swifttest
-  >> class SomeSuperclass {}
+  >> class SomeSuperclass { }
   -> class SomeClass: SomeSuperclass, FirstProtocol, AnotherProtocol {
         // class definition goes here
      }
@@ -530,10 +530,10 @@ class SomeClass: SomeProtocol {
         init(x: Int)
      }
   -> class C1: P {
-        required init(x: Int) {}
+        required init(x: Int) { }
      }
   -> class C2: P {
-        init() {}
+        init() { }
         required convenience init(x: Int) {
            self.init()
         }
@@ -557,13 +557,13 @@ see <doc:Initialization#Required-Initializers>.
         init(s: String)
      }
   -> class C1: P {
-        required init(s: String) {}
+        required init(s: String) { }
      }
   -> class C2: P {
-        init(s: String) {}
+        init(s: String) { }
      }
   !$ error: initializer requirement 'init(s:)' can only be satisfied by a 'required' initializer in non-final class 'C2'
-  !! init(s: String) {}
+  !! init(s: String) { }
   !! ^
   !! required
   ```
@@ -577,7 +577,7 @@ see <doc:Initialization#Required-Initializers>.
         init(s: String)
      }
   -> class C: P {
-        required init(s: String) {}
+        required init(s: String) { }
      }
   -> class D1: C {
         required init(s: String) { super.init(s: s) }
@@ -590,7 +590,7 @@ see <doc:Initialization#Required-Initializers>.
   !! ^
   !! required
   !$ note: overridden required initializer is here
-  !! required init(s: String) {}
+  !! required init(s: String) { }
   !! ^
   ```
 -->
@@ -608,10 +608,10 @@ see <doc:Initialization#Required-Initializers>.
         init(s: String)
      }
   -> final class C1: P {
-        required init(s: String) {}
+        required init(s: String) { }
      }
   -> final class C2: P {
-        init(s: String) {}
+        init(s: String) { }
      }
   ```
 -->
@@ -677,8 +677,8 @@ a nonfailable initializer or an implicitly unwrapped failable initializer.
 
   ```swifttest
   -> protocol P { init?(i: Int) }
-  -> class C: P { required init?(i: Int) {} }
-  -> struct S: P { init?(i: Int) {} }
+  -> class C: P { required init?(i: Int) { } }
+  -> struct S: P { init?(i: Int) { } }
   ```
 -->
 
@@ -687,8 +687,8 @@ a nonfailable initializer or an implicitly unwrapped failable initializer.
 
   ```swifttest
   -> protocol P { init?(i: Int) }
-  -> class C: P { required init!(i: Int) {} }
-  -> struct S: P { init!(i: Int) {} }
+  -> class C: P { required init!(i: Int) { } }
+  -> struct S: P { init!(i: Int) { } }
   ```
 -->
 
@@ -697,8 +697,8 @@ a nonfailable initializer or an implicitly unwrapped failable initializer.
 
   ```swifttest
   -> protocol P { init!(i: Int) }
-  -> class C: P { required init?(i: Int) {} }
-  -> struct S: P { init?(i: Int) {} }
+  -> class C: P { required init?(i: Int) { } }
+  -> struct S: P { init?(i: Int) { } }
   ```
 -->
 
@@ -707,8 +707,8 @@ a nonfailable initializer or an implicitly unwrapped failable initializer.
 
   ```swifttest
   -> protocol P { init!(i: Int) }
-  -> class C: P { required init!(i: Int) {} }
-  -> struct S: P { init!(i: Int) {} }
+  -> class C: P { required init!(i: Int) { } }
+  -> struct S: P { init!(i: Int) { } }
   ```
 -->
 
@@ -717,8 +717,8 @@ a nonfailable initializer or an implicitly unwrapped failable initializer.
 
   ```swifttest
   -> protocol P { init?(i: Int) }
-  -> class C: P { required init(i: Int) {} }
-  -> struct S: P { init(i: Int) {} }
+  -> class C: P { required init(i: Int) { } }
+  -> struct S: P { init(i: Int) { } }
   ```
 -->
 
@@ -727,8 +727,8 @@ a nonfailable initializer or an implicitly unwrapped failable initializer.
 
   ```swifttest
   -> protocol P { init!(i: Int) }
-  -> class C: P { required init(i: Int) {} }
-  -> struct S: P { init(i: Int) {} }
+  -> class C: P { required init(i: Int) { } }
+  -> struct S: P { init(i: Int) { } }
   ```
 -->
 
@@ -737,8 +737,8 @@ a nonfailable initializer or an implicitly unwrapped failable initializer.
 
   ```swifttest
   -> protocol P { init(i: Int) }
-  -> class C: P { required init(i: Int) {} }
-  -> struct S: P { init(i: Int) {} }
+  -> class C: P { required init(i: Int) { } }
+  -> struct S: P { init(i: Int) { } }
   ```
 -->
 
@@ -747,8 +747,8 @@ a nonfailable initializer or an implicitly unwrapped failable initializer.
 
   ```swifttest
   -> protocol P { init(i: Int) }
-  -> class C: P { required init!(i: Int) {} }
-  -> struct S: P { init!(i: Int) {} }
+  -> class C: P { required init!(i: Int) { } }
+  -> struct S: P { init!(i: Int) { } }
   ```
 -->
 
@@ -1187,7 +1187,7 @@ struct Hamster {
         return "A hamster named \(name)"
     }
 }
-extension Hamster: TextRepresentable {}
+extension Hamster: TextRepresentable { }
 ```
 
 <!--
@@ -1200,7 +1200,7 @@ extension Hamster: TextRepresentable {}
            return "A hamster named \(name)"
         }
      }
-  -> extension Hamster: TextRepresentable {}
+  -> extension Hamster: TextRepresentable { }
   ```
 -->
 
@@ -1585,8 +1585,8 @@ protocol InheritingProtocol: SomeProtocol, AnotherProtocol {
   - test: `protocols`
 
   ```swifttest
-  >> protocol SomeProtocol {}
-  >> protocol AnotherProtocol {}
+  >> protocol SomeProtocol { }
+  >> protocol AnotherProtocol { }
   -> protocol InheritingProtocol: SomeProtocol, AnotherProtocol {
         // protocol definition goes here
      }
@@ -1717,7 +1717,7 @@ protocol SomeClassOnlyProtocol: AnyObject, SomeInheritedProtocol {
   - test: `classOnlyProtocols`
 
   ```swifttest
-  >> protocol SomeInheritedProtocol {}
+  >> protocol SomeInheritedProtocol { }
   -> protocol SomeClassOnlyProtocol: AnyObject, SomeInheritedProtocol {
         // class-only protocol definition goes here
      }
@@ -1739,7 +1739,7 @@ that tries to adopt `SomeClassOnlyProtocol`.
   - test: `anyobject-doesn't-have-to-be-first`
 
   ```swifttest
-  >> protocol SomeInheritedProtocol {}
+  >> protocol SomeInheritedProtocol { }
   -> protocol SomeClassOnlyProtocol: SomeInheritedProtocol, AnyObject {
         // class-only protocol definition goes here
      }

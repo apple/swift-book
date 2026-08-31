@@ -127,7 +127,7 @@ class SomeSubclass: SomeSuperclass {
   - test: `protocolSyntax`
 
   ```swifttest
-  >> class SomeSuperclass {}
+  >> class SomeSuperclass { }
   -> class SomeSubclass: SomeSuperclass {
         // subclass definition goes here
      }
@@ -525,7 +525,7 @@ For more information, see <doc:Extensions>.
   -> class D : C {
         override var someVar: Int {
            get { return 1 }
-           set {}
+           set { }
         }
         override func someFunction() {
            print("In overridden someFunction")
@@ -563,7 +563,7 @@ Any attempt to subclass a final class is reported as a compile-time error.
   -> class D : C {
         override var someVar: Int {
            get { return 1 }
-           set {}
+           set { }
         }
         override func someFunction() {
            print("In overridden someFunction")

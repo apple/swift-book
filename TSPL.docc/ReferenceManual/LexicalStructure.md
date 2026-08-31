@@ -291,10 +291,10 @@ so they must be escaped with backticks in that context.
   - test: `var-requires-backticks`
 
   ```swifttest
-  -> func g(`var` x: Int) {}
-  -> func f(var x: Int) {}
+  -> func g(`var` x: Int) { }
+  -> func f(var x: Int) { }
   !$ warning: 'var' in this position is interpreted as an argument label
-  !! func f(var x: Int) {}
+  !! func f(var x: Int) { }
   !!        ^~~
   !!        `var`
   ```
@@ -304,10 +304,10 @@ so they must be escaped with backticks in that context.
   - test: `let-requires-backticks`
 
   ```swifttest
-  -> func g(`let` x: Int) {}
-  -> func f(let x: Int) {}
+  -> func g(`let` x: Int) { }
+  -> func f(let x: Int) { }
   !$ warning: 'let' in this position is interpreted as an argument label
-  !! func f(let x: Int) {}
+  !! func f(let x: Int) { }
   !!        ^~~
   !!        `let`
   ```
@@ -317,10 +317,10 @@ so they must be escaped with backticks in that context.
   - test: `inout-requires-backticks`
 
   ```swifttest
-  -> func g(`inout` x: Int) {}
-  -> func f(inout x: Int) {}
+  -> func g(`inout` x: Int) { }
+  -> func f(inout x: Int) { }
   !$ error: 'inout' before a parameter name is not allowed, place it before the parameter type instead
-  !! func f(inout x: Int) {}
+  !! func f(inout x: Int) { }
   !!        ^~~~~
   !!                 inout
   ```

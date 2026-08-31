@@ -358,19 +358,6 @@ print(teamScore)
   ```
 -->
 
-<!--
-  REFERENCE
-  Jelly babies are a candy/sweet that was closely associated
-  with past incarnations of the Doctor in Dr. Who.
--->
-
-<!--
-  -> let haveJellyBabies = true
-  -> if haveJellyBabies {
-     }
-  << Would you like a jelly baby?
--->
-
 In an `if` statement,
 the conditional must be a Boolean expression ---
 this means that code such as `if score { ... }` is an error,
@@ -1622,31 +1609,6 @@ or it responds with a description of what went wrong.
 
   "Out of cheese" is a reference to a Terry Pratchett book,
   which features a computer named Hex.
-  Hex's other error messages include:
-
-       - Out of Cheese Error. Redo From Start.
-       - Mr. Jelly! Mr. Jelly! Error at Address Number 6, Treacle Mine Road.
-       - Melon melon melon
-       - +++ Wahhhhhhh! Mine! +++
-       - +++ Divide By Cucumber Error. Please Reinstall Universe And Reboot +++
-       - +++Whoops! Here comes the cheese! +++
-
-  These messages themselves are references to BASIC interpreters
-  (REDO FROM START) and old Hayes-compatible modems (+++).
-
-  The "out of cheese error" may be a reference to a military computer
-  although I can't find the source of this story anymore.
-  As the story goes, during the course of a rather wild party,
-  one of the computer's vacuum tube cabinets
-  was opened to provide heat to a cold room in the winter.
-  Through great coincidence,
-  when a cheese tray got bashed into it during the celebration,
-  the computer kept on working even though some of the tubes were broken
-  and had cheese splattered & melted all over them.
-  Tech were dispatched to make sure the computer was ok
-  and told add more cheese if necessary --
-  the officer in charge said that he didn't want
-  an "out of cheese error" interrupting the calculation.
 -->
 
 ```swift

@@ -610,7 +610,7 @@ unique argument labels help make your code more readable.
   - test: `non-unique-external-name`
 
   ```swifttest
-  -> func foo(external a: Int, external b: Int) {}
+  -> func foo(external a: Int, external b: Int) { }
   -> foo(external: 7, external: 12)
   ```
 -->
@@ -802,13 +802,13 @@ that come after the variadic parameter.
 
   ```swifttest
   // Labeled, immediately after
-  >> func f(_ a: Int..., b: String) {}
+  >> func f(_ a: Int..., b: String) { }
 
   // Unlabeled, not immediately after
-  >> func g(_ a: Int..., b: String, _ c: Int) {}
+  >> func g(_ a: Int..., b: String, _ c: Int) { }
 
   // Multiple
-  >> func h(_a: Int..., b: String, _ c: Int..., d: String) {}
+  >> func h(_a: Int..., b: String, _ c: Int..., d: String) { }
   ```
 -->
 
@@ -817,9 +817,9 @@ that come after the variadic parameter.
 
   ```swifttest
   // Unlabeled, immediately after
-  >> func f(_ a: Int..., _ b: String) {}
+  >> func f(_ a: Int..., _ b: String) { }
   !$ error: a parameter following a variadic parameter requires a label
-  !! func f(_ a: Int..., _ b: String) {}
+  !! func f(_ a: Int..., _ b: String) { }
   !! ^
   ```
 -->

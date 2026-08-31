@@ -1534,7 +1534,7 @@ see <doc:Attributes#resultBuilder>.
 
    .. testcode:: customOperators
 
-  -> infix operator *** {}
+  -> infix operator *** { }
   -> protocol AnotherProtocol {
          // static func * (scale: Double, vector: Self) -> Self
          static func *** (scale: Double, vector: Vector2D) -> Vector2D
@@ -1545,7 +1545,7 @@ see <doc:Attributes#resultBuilder>.
              return Vector2D(x: scale * vector.x, y: scale * vector.y)
          }
      }
-  -> extension Vector2D: AnotherProtocol {}
+  -> extension Vector2D: AnotherProtocol { }
   -> let unitVector = Vector2D(x: 1.0, y: 1.0)
   -> print(2.5 *** unitVector)
   <- Vector2D(x: 2.5, y: 2.5)

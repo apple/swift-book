@@ -1925,10 +1925,12 @@ into code that calls the static methods of the result builder type:
     >> assert(builderNumber == manualNumber)
     ```
   -->
+
 - An assignment statement is transformed like an expression,
   but is understood to evaluate to `()`.
   You can define an overload of `buildExpression(_:)`
   that takes an argument of type `()` to handle assignments specifically.
+
 - A branch statement that checks an availability condition
   becomes a call to the `buildLimitedAvailability(_:)` method,
   if that method is implemented.
@@ -2118,6 +2120,7 @@ into code that calls the static methods of the result builder type:
     << Building first... [32]
     ```
   -->
+
 - A branch statement that might not produce a value,
   like an `if` statement without an `else` clause,
   becomes a call to `buildOptional(_:)`.
@@ -2156,6 +2159,7 @@ into code that calls the static methods of the result builder type:
     >> assert(builderOptional == manualOptional)
     ```
   -->
+
 - If the result builder implements
   the `buildPartialBlock(first:)`
   and `buildPartialBlock(accumulated:next:)` methods,
@@ -2236,6 +2240,7 @@ into code that calls the static methods of the result builder type:
     >> assert(type(of: builderBlock) == type(of: manualResult))
     ```
   -->
+
 - Otherwise, a code block or `do` statement
   becomes a call to the `buildBlock(_:)` method.
   Each of the statements inside of the block is transformed,
@@ -2275,6 +2280,7 @@ into code that calls the static methods of the result builder type:
     >> assert(builderBlock == manualBlock)
     ```
   -->
+
 - A `for` loop becomes a temporary variable, a `for` loop,
   and call to the `buildArray(_:)` method.
   The new `for` loop iterates over the sequence
@@ -2316,6 +2322,7 @@ into code that calls the static methods of the result builder type:
     >> assert(builderArray == manualArray)
     ```
   -->
+
 - If the result builder has a `buildFinalResult(_:)` method,
   the final result becomes a call to that method.
   This transformation is always last.

@@ -107,6 +107,22 @@ in the reference, omit it.
 
 Spelled as two words, not closed up or hyphenated.
 
+## braces
+
+In code listings,
+include a space between empty curly brackets.
+For example:
+
+```swift
+class SomeSuperClass { }
+```
+
+Don't include the space when referring to braces in prose.
+For example:
+
+> You can write a closure without a name
+> by surrounding code with braces (`{}`).
+
 ## comments
 
 End each comment with a period, even when it's a sentence fragment.
@@ -169,6 +185,13 @@ In the reference,
 “function” includes both free functions and member functions,
 so we don’t also mention methods separately.
 In the guide, we write “functions and methods”.
+
+In a code listing,
+write things like functions, methods, getters, and setters
+across multiple lines in most cases.
+If the function body is just a single `return`
+you can write it on one line if it reads better that way.
+Likewise for single-expression closures.
 
 ## headings
 

@@ -438,8 +438,8 @@ otherwise, it returns `false`.
   - test: `is-operator-tautology`
 
   ```swifttest
-  -> class Base {}
-  -> class Subclass: Base {}
+  -> class Base { }
+  -> class Subclass: Base { }
   -> var s = Subclass()
   -> var b = Base()
 
@@ -971,7 +971,7 @@ myFunction { $0 + $1 }
   - test: `closure-expression-forms`
 
   ```swifttest
-  >> func myFunction(f: (Int, Int) -> Int) {}
+  >> func myFunction(f: (Int, Int) -> Int) { }
   -> myFunction { (x: Int, y: Int) -> Int in
          return x + y
      }
@@ -2123,7 +2123,7 @@ let anotherSelector = #selector(SomeClass.doSomething(_:) as (SomeClass) -> (Str
   >> class SomeClass: NSObject {
   >>     @objc let property: String
   >>     @objc(doSomethingWithInt:)
-  >>     func doSomething(_ x: Int) {}
+  >>     func doSomething(_ x: Int) { }
   >>     init(property: String) {
   >>         self.property = property
   >>     }
@@ -2831,10 +2831,10 @@ For example:
 
 ```swift
 class SomeClass {
-    func someMethod(x: Int, y: Int) {}
-    func someMethod(x: Int, z: Int) {}
-    func overloadedMethod(x: Int, y: Int) {}
-    func overloadedMethod(x: Int, y: Bool) {}
+    func someMethod(x: Int, y: Int) { }
+    func someMethod(x: Int, z: Int) { }
+    func overloadedMethod(x: Int, y: Int) { }
+    func overloadedMethod(x: Int, y: Bool) { }
 }
 let instance = SomeClass()
 
@@ -2851,10 +2851,10 @@ let d: (Int, Bool) -> Void  = instance.overloadedMethod(x:y:)  // Unambiguous
 
   ```swifttest
   -> class SomeClass {
-         func someMethod(x: Int, y: Int) {}
-         func someMethod(x: Int, z: Int) {}
-         func overloadedMethod(x: Int, y: Int) {}
-         func overloadedMethod(x: Int, y: Bool) {}
+         func someMethod(x: Int, y: Int) { }
+         func someMethod(x: Int, z: Int) { }
+         func overloadedMethod(x: Int, y: Int) { }
+         func overloadedMethod(x: Int, y: Bool) { }
      }
   -> let instance = SomeClass()
 
@@ -2863,10 +2863,10 @@ let d: (Int, Bool) -> Void  = instance.overloadedMethod(x:y:)  // Unambiguous
   !! let a = instance.someMethod              // Ambiguous
   !!         ^
   !$ note: found this candidate
-  !!              func someMethod(x: Int, y: Int) {}
+  !!              func someMethod(x: Int, y: Int) { }
   !!                   ^
   !$ note: found this candidate
-  !!              func someMethod(x: Int, z: Int) {}
+  !!              func someMethod(x: Int, z: Int) { }
   !!                   ^
   -> let b = instance.someMethod(x:y:)        // Unambiguous
 
@@ -2875,20 +2875,20 @@ let d: (Int, Bool) -> Void  = instance.overloadedMethod(x:y:)  // Unambiguous
   !! let d = instance.overloadedMethod        // Ambiguous
   !!         ^
   !$ note: found this candidate
-  !!              func overloadedMethod(x: Int, y: Int) {}
+  !!              func overloadedMethod(x: Int, y: Int) { }
   !!                   ^
   !$ note: found this candidate
-  !!              func overloadedMethod(x: Int, y: Bool) {}
+  !!              func overloadedMethod(x: Int, y: Bool) { }
   !!                   ^
   -> let d = instance.overloadedMethod(x:y:)  // Still ambiguous
   !$ error: ambiguous use of 'overloadedMethod(x:y:)'
   !!     let d = instance.overloadedMethod(x:y:)  // Still ambiguous
   !!             ^
   !$ note: found this candidate
-  !!              func overloadedMethod(x: Int, y: Int) {}
+  !!              func overloadedMethod(x: Int, y: Int) { }
   !!                   ^
   !$ note: found this candidate
-  !!              func overloadedMethod(x: Int, y: Bool) {}
+  !!              func overloadedMethod(x: Int, y: Bool) { }
   !!                   ^
   -> let d: (Int, Bool) -> Void  = instance.overloadedMethod(x:y:)  // Unambiguous
   ```

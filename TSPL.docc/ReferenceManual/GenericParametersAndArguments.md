@@ -144,7 +144,7 @@ When used in an expression,
 these constants have type `Int`.
 
 ```swift
-print(a.x)  // Prints "4"
+print(type(of: a).x)  // Prints "2".
 ```
 
 The value of an integer generic parameter can be inferred

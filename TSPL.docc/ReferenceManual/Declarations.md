@@ -1000,7 +1000,7 @@ func multithreadedFunction(queue: DispatchQueue, x: inout Int) {
 
     // Operate on localX asynchronously, then wait before returning.
     queue.async { someMutatingOperation(&localX) }
-    queue.sync {}
+    queue.sync { }
 }
 ```
 
@@ -1009,7 +1009,7 @@ func multithreadedFunction(queue: DispatchQueue, x: inout Int) {
 
   ```swifttest
   >> import Dispatch
-  >> func someMutatingOperation(_ a: inout Int) {}
+  >> func someMutatingOperation(_ a: inout Int) { }
   -> func multithreadedFunction(queue: DispatchQueue, x: inout Int) {
         // Make a local copy and manually copy it back.
         var localX = x
@@ -1017,7 +1017,7 @@ func multithreadedFunction(queue: DispatchQueue, x: inout Int) {
 
         // Operate on localX asynchronously, then wait before returning.
         queue.async { someMutatingOperation(&localX) }
-        queue.sync {}
+        queue.sync { }
      }
   ```
 -->
@@ -2172,7 +2172,7 @@ and designated initializers must be marked with the `override` declaration modif
   - test: `designatedInitializersRequireOverride`
 
   ```swifttest
-  -> class C { init() {} }
+  -> class C { init() { } }
   -> class D: C { override init() { super.init() } }
   ```
 -->
@@ -2761,7 +2761,7 @@ protocol SubProtocolB: SomeProtocol where SomeType: Equatable { }
 
   C#:
 
-  interface Sequence <Element> {}
+  interface Sequence <Element> { }
 
   class String : Sequence <UnicodeScalar>
   class String : Sequence <GraphemeCluster>

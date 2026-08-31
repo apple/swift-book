@@ -552,14 +552,14 @@ and can be accessed through dot syntax, but can't be set to a different value.
   ```swifttest
   -> class C {
         let x: Int { return 42 }
-        let y: Int { get { return 42 } set {} }
+        let y: Int { get { return 42 } set { } }
      }
   !! /tmp/swifttest.swift:2:15: error: 'let' declarations cannot be computed properties
   !! let x: Int { return 42 }
   !! ~~~        ^
   !! var
   !! /tmp/swifttest.swift:3:15: error: 'let' declarations cannot be computed properties
-  !! let y: Int { get { return 42 } set {} }
+  !! let y: Int { get { return 42 } set { } }
   !! ~~~        ^
   !! var
   ```
@@ -682,7 +682,7 @@ Overriding properties is described in <doc:Inheritance#Overriding>.
   ```swifttest
   -> class C {
         var x = 0
-        var y: Int { get { return 42 } set {} }
+        var y: Int { get { return 42 } set { } }
      }
   -> class D: C {
         override var x: Int {

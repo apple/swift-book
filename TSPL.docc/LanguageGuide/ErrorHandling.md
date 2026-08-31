@@ -167,8 +167,8 @@ func cannotThrowErrors() -> String
   - test: `throwing-parameter-can-overload-nonthrowing`
 
   ```swifttest
-  -> func f(callback: () -> Int) {}
-  -> func f(callback: () throws -> Int) {} // Allowed
+  -> func f(callback: () -> Int) { }
+  -> func f(callback: () throws -> Int) { } // Allowed
   ```
 -->
 
@@ -656,7 +656,7 @@ func fetchData() -> Data? {
   - test: `optional-try-cached-data`
 
   ```swifttest
-  >> struct Data {}
+  >> struct Data { }
   >> func fetchDataFromDisk() throws -> Data { return Data() }
   >> func fetchDataFromServer() throws -> Data { return Data() }
   -> func fetchData() -> Data? {
@@ -691,7 +691,7 @@ let photo = try! loadImage(atPath: "./Resources/John Appleseed.jpg")
   - test: `forceTryStatement`
 
   ```swifttest
-  >> struct Image {}
+  >> struct Image { }
   >> func loadImage(atPath path: String) throws -> Image {
   >>     return Image()
   >> }
@@ -956,7 +956,7 @@ func processFile(filename: String) throws {
   >>    func readline() throws -> String? { return nil }
   >> }
   >> func open(_ file: String) -> File { return File() }
-  >> func close(_ fileHandle: File) {}
+  >> func close(_ fileHandle: File) { }
   -> func processFile(filename: String) throws {
         if exists(filename) {
            let file = open(filename)

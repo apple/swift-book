@@ -175,9 +175,9 @@ at the beginning of the entity's declaration.
 For example:
 
 ```swift
-public class SomePublicClass {}
-internal struct SomeInternalStruct() {}
-private func somePrivateFunction() {}
+public class SomePublicClass { }
+internal struct SomeInternalStruct() { }
+private func somePrivateFunction() { }
 ```
 
 The code above declares `SomePublicClass` as public,
@@ -189,7 +189,7 @@ as described in <doc:AccessControl#Default-Access-Levels>.
 For example, in the code below, `SomeInternalStruct` is implicitly internal:
 
 ```swift
-struct SomeInternalStruct() {}
+struct SomeInternalStruct() { }
 ```
 
 ## Custom Types
@@ -222,23 +222,23 @@ the default access level of the type's members will be internal.
 public class SomePublicClass {                   // explicitly public class
     public var somePublicProperty = 0            // explicitly public class member
     var someInternalProperty = 0                 // implicitly internal class member
-    fileprivate func someFilePrivateMethod() {}  // explicitly file-private class member
-    private func somePrivateMethod() {}          // explicitly private class member
+    fileprivate func someFilePrivateMethod() { } // explicitly file-private class member
+    private func somePrivateMethod() { }         // explicitly private class member
 }
 
 class SomeInternalClass {                        // implicitly internal class
     var someInternalProperty = 0                 // implicitly internal class member
-    fileprivate func someFilePrivateMethod() {}  // explicitly file-private class member
-    private func somePrivateMethod() {}          // explicitly private class member
+    fileprivate func someFilePrivateMethod() { } // explicitly file-private class member
+    private func somePrivateMethod() { }         // explicitly private class member
 }
 
 fileprivate class SomeFilePrivateClass {         // explicitly file-private class
-    func someFilePrivateMethod() {}              // implicitly file-private class member
-    private func somePrivateMethod() {}          // explicitly private class member
+    func someFilePrivateMethod() { }             // implicitly file-private class member
+    private func somePrivateMethod() { }         // explicitly private class member
 }
 
 private class SomePrivateClass {                 // explicitly private class
-    func somePrivateMethod() {}                  // implicitly private class member
+    func somePrivateMethod() { }                 // implicitly private class member
 }
 ```
 
@@ -249,23 +249,23 @@ private class SomePrivateClass {                 // explicitly private class
   -> public class SomePublicClass {                  // explicitly public class
         public var somePublicProperty = 0            // explicitly public class member
         var someInternalProperty = 0                 // implicitly internal class member
-        fileprivate func someFilePrivateMethod() {}  // explicitly file-private class member
-        private func somePrivateMethod() {}          // explicitly private class member
+        fileprivate func someFilePrivateMethod() { } // explicitly file-private class member
+        private func somePrivateMethod() { }         // explicitly private class member
      }
 
   -> class SomeInternalClass {                       // implicitly internal class
         var someInternalProperty = 0                 // implicitly internal class member
-        fileprivate func someFilePrivateMethod() {}  // explicitly file-private class member
-        private func somePrivateMethod() {}          // explicitly private class member
+        fileprivate func someFilePrivateMethod() { } // explicitly file-private class member
+        private func somePrivateMethod() { }         // explicitly private class member
      }
 
   -> fileprivate class SomeFilePrivateClass {        // explicitly file-private class
-        func someFilePrivateMethod() {}              // implicitly file-private class member
-        private func somePrivateMethod() {}          // explicitly private class member
+        func someFilePrivateMethod() { }             // implicitly file-private class member
+        private func somePrivateMethod() { }         // explicitly private class member
      }
 
   -> private class SomePrivateClass {                // explicitly private class
-        func somePrivateMethod() {}                  // implicitly private class member
+        func somePrivateMethod() { }                 // implicitly private class member
      }
   ```
 -->
@@ -282,9 +282,9 @@ the access level for that compound tuple type will be private.
   - test: `tupleTypes_Module1, tupleTypes_Module1_PublicAndInternal, tupleTypes_Module1_Private`
 
   ```swifttest
-  -> public struct PublicStruct {}
-  -> internal struct InternalStruct {}
-  -> fileprivate struct FilePrivateStruct {}
+  -> public struct PublicStruct { }
+  -> internal struct InternalStruct { }
+  -> fileprivate struct FilePrivateStruct { }
   -> public func returnPublicTuple() -> (PublicStruct, PublicStruct) {
         return (PublicStruct(), PublicStruct())
      }
@@ -654,11 +654,11 @@ the original implementation of `someMethod()`:
 
 ```swift
 public class A {
-    fileprivate func someMethod() {}
+    fileprivate func someMethod() { }
 }
 
 internal class B: A {
-    override internal func someMethod() {}
+    override internal func someMethod() { }
 }
 ```
 
@@ -667,11 +667,11 @@ internal class B: A {
 
   ```swifttest
   -> public class A {
-        fileprivate func someMethod() {}
+        fileprivate func someMethod() { }
      }
 
   -> internal class B: A {
-        override internal func someMethod() {}
+        override internal func someMethod() { }
      }
   ```
 -->
@@ -685,7 +685,7 @@ or within the same module as the superclass for an internal member call):
 
 ```swift
 public class A {
-    fileprivate func someMethod() {}
+    fileprivate func someMethod() { }
 }
 
 internal class B: A {
@@ -700,7 +700,7 @@ internal class B: A {
 
   ```swifttest
   -> public class A {
-        fileprivate func someMethod() {}
+        fileprivate func someMethod() { }
      }
 
   -> internal class B: A {
@@ -741,7 +741,7 @@ private var privateInstance = SomePrivateClass()
 
   ```swifttest
   -> class Scope {  // Need to be in a scope to meaningfully use private (vs fileprivate)
-  -> private class SomePrivateClass {}
+  -> private class SomePrivateClass { }
   -> let privateConstant = SomePrivateClass()
   !! /tmp/swifttest.swift:3:5: error: property must be declared private because its type 'Scope.SomePrivateClass' uses a private type
   !! let privateConstant = SomePrivateClass()
@@ -764,7 +764,7 @@ private var privateInstance = SomePrivateClass()
   !! subscript(index: Int) -> SomePrivateClass {
   !! ^                        ~~~~~~~~~~~~~~~~
   !! /tmp/swifttest.swift:2:15: note: type declared here
-  !! private class SomePrivateClass {}
+  !! private class SomePrivateClass { }
   !! ^
   ```
 -->
@@ -911,7 +911,7 @@ public struct TrackedString {
             numberOfEdits += 1
         }
     }
-    public init() {}
+    public init() { }
 }
 ```
 
@@ -926,7 +926,7 @@ public struct TrackedString {
               numberOfEdits += 1
            }
         }
-        public init() {}
+        public init() { }
      }
   ```
 -->
@@ -942,7 +942,7 @@ public struct TrackedString {
               numberOfEdits += 1
            }
         }
-        public init() {}
+        public init() { }
      }
   ```
 -->
@@ -1120,28 +1120,28 @@ on any type that adopts the protocol.
   // these should all be allowed without problem
   -> public class PublicClassConformingToPublicProtocol: PublicProtocol {
         public var publicProperty = 0
-        public func publicMethod() {}
+        public func publicMethod() { }
      }
   -> internal class InternalClassConformingToPublicProtocol: PublicProtocol {
         var publicProperty = 0
-        func publicMethod() {}
+        func publicMethod() { }
      }
   -> private class PrivateClassConformingToPublicProtocol: PublicProtocol {
         var publicProperty = 0
-        func publicMethod() {}
+        func publicMethod() { }
      }
 
   -> public class PublicClassConformingToInternalProtocol: InternalProtocol {
         var internalProperty = 0
-        func internalMethod() {}
+        func internalMethod() { }
      }
   -> internal class InternalClassConformingToInternalProtocol: InternalProtocol {
         var internalProperty = 0
-        func internalMethod() {}
+        func internalMethod() { }
      }
   -> private class PrivateClassConformingToInternalProtocol: InternalProtocol {
         var internalProperty = 0
-        func internalMethod() {}
+        func internalMethod() { }
      }
   ```
 -->
@@ -1153,7 +1153,7 @@ on any type that adopts the protocol.
   // these will fail, because FilePrivateProtocol isn't visible outside of its file
   -> public class PublicClassConformingToFilePrivateProtocol: FilePrivateProtocol {
         var filePrivateProperty = 0
-        func filePrivateMethod() {}
+        func filePrivateMethod() { }
      }
   !$ error: cannot find type 'FilePrivateProtocol' in scope
   !! public class PublicClassConformingToFilePrivateProtocol: FilePrivateProtocol {
@@ -1162,7 +1162,7 @@ on any type that adopts the protocol.
   // these will fail, because PrivateProtocol isn't visible outside of its file
   -> public class PublicClassConformingToPrivateProtocol: PrivateProtocol {
         var privateProperty = 0
-        func privateMethod() {}
+        func privateMethod() { }
      }
   !$ error: cannot find type 'PrivateProtocol' in scope
   !! public class PublicClassConformingToPrivateProtocol: PrivateProtocol {
@@ -1178,15 +1178,15 @@ on any type that adopts the protocol.
   -> import protocols_Module1
   -> public class PublicClassConformingToPublicProtocol: PublicProtocol {
         public var publicProperty = 0
-        public func publicMethod() {}
+        public func publicMethod() { }
      }
   -> internal class InternalClassConformingToPublicProtocol: PublicProtocol {
         var publicProperty = 0
-        func publicMethod() {}
+        func publicMethod() { }
      }
   -> private class PrivateClassConformingToPublicProtocol: PublicProtocol {
         var publicProperty = 0
-        func publicMethod() {}
+        func publicMethod() { }
      }
   ```
 -->
@@ -1200,15 +1200,15 @@ on any type that adopts the protocol.
   -> import protocols_Module1
   -> public class PublicClassConformingToInternalProtocol: InternalProtocol {
         var internalProperty = 0
-        func internalMethod() {}
+        func internalMethod() { }
      }
   -> public class PublicClassConformingToFilePrivateProtocol: FilePrivateProtocol {
         var filePrivateProperty = 0
-        func filePrivateMethod() {}
+        func filePrivateMethod() { }
      }
   -> public class PublicClassConformingToPrivateProtocol: PrivateProtocol {
         var privateProperty = 0
-        func privateMethod() {}
+        func privateMethod() { }
      }
   !$ error: cannot find type 'InternalProtocol' in scope
   !! public class PublicClassConformingToInternalProtocol: InternalProtocol {
@@ -1280,7 +1280,7 @@ the default access level for each protocol requirement implementation within the
 
   ```swifttest
   -> public struct PublicStruct {
-        public init() {}
+        public init() { }
         func implicitlyInternalMethodFromStruct() -> Int { return 0 }
      }
   -> extension PublicStruct {
@@ -1439,9 +1439,9 @@ but a public type alias can't alias an internal, file-private, or private type.
   - test: `typeAliases`
 
   ```swifttest
-  -> public struct PublicStruct {}
-  -> internal struct InternalStruct {}
-  -> private struct PrivateStruct {}
+  -> public struct PublicStruct { }
+  -> internal struct InternalStruct { }
+  -> private struct PrivateStruct { }
 
   -> public typealias PublicAliasOfPublicType = PublicStruct
   -> internal typealias InternalAliasOfPublicType = PublicStruct
@@ -1459,19 +1459,19 @@ but a public type alias can't alias an internal, file-private, or private type.
   !! public typealias PublicAliasOfInternalType = InternalStruct     // not allowed
   !! ^                           ~~~~~~~~~~~~~~
   !$ note: type declared here
-  !! internal struct InternalStruct {}
+  !! internal struct InternalStruct { }
   !! ^
   !$ error: type alias cannot be declared public because its underlying type uses a private type
   !! public typealias PublicAliasOfPrivateType = PrivateStruct       // not allowed
   !! ^                          ~~~~~~~~~~~~~
   !$ note: type declared here
-  !! private struct PrivateStruct {}
+  !! private struct PrivateStruct { }
   !! ^
   !$ error: type alias cannot be declared internal because its underlying type uses a private type
   !! internal typealias InternalAliasOfPrivateType = PrivateStruct   // not allowed
   !! ^                            ~~~~~~~~~~~~~
   !$ note: type declared here
-  !! private struct PrivateStruct {}
+  !! private struct PrivateStruct { }
   !! ^
   ```
 -->

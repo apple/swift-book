@@ -246,9 +246,9 @@ For example:
   - test: `argument-names`
 
   ```swifttest
-  -> func someFunction(left: Int, right: Int) {}
-  -> func anotherFunction(left: Int, right: Int) {}
-  -> func functionWithDifferentLabels(top: Int, bottom: Int) {}
+  -> func someFunction(left: Int, right: Int) { }
+  -> func anotherFunction(left: Int, right: Int) { }
+  -> func functionWithDifferentLabels(top: Int, bottom: Int) { }
 
   -> var f = someFunction // The type of f is (Int, Int) -> Void, not (left: Int, right: Int) -> Void.
   >> print(type(of: f))
@@ -259,18 +259,18 @@ For example:
 -->
 
 ```swift
-func someFunction(left: Int, right: Int) {}
-func anotherFunction(left: Int, right: Int) {}
-func functionWithDifferentLabels(top: Int, bottom: Int) {}
+func someFunction(left: Int, right: Int) { }
+func anotherFunction(left: Int, right: Int) { }
+func functionWithDifferentLabels(top: Int, bottom: Int) { }
 
 var f = someFunction // The type of f is (Int, Int) -> Void, not (left: Int, right: Int) -> Void.
 f = anotherFunction              // OK
 f = functionWithDifferentLabels  // OK
 
-func functionWithDifferentArgumentTypes(left: Int, right: String) {}
+func functionWithDifferentArgumentTypes(left: Int, right: String) { }
 f = functionWithDifferentArgumentTypes     // Error
 
-func functionWithDifferentNumberOfArguments(left: Int, right: Int, top: Int) {}
+func functionWithDifferentNumberOfArguments(left: Int, right: Int, top: Int) { }
 f = functionWithDifferentNumberOfArguments // Error
 ```
 
@@ -278,21 +278,21 @@ f = functionWithDifferentNumberOfArguments // Error
   - test: `argument-names-err`
 
   ```swifttest
-  -> func someFunction(left: Int, right: Int) {}
-  -> func anotherFunction(left: Int, right: Int) {}
-  -> func functionWithDifferentLabels(top: Int, bottom: Int) {}
+  -> func someFunction(left: Int, right: Int) { }
+  -> func anotherFunction(left: Int, right: Int) { }
+  -> func functionWithDifferentLabels(top: Int, bottom: Int) { }
 
   -> var f = someFunction // The type of f is (Int, Int) -> Void, not (left: Int, right: Int) -> Void.
   -> f = anotherFunction              // OK
   -> f = functionWithDifferentLabels  // OK
 
-  -> func functionWithDifferentArgumentTypes(left: Int, right: String) {}
+  -> func functionWithDifferentArgumentTypes(left: Int, right: String) { }
   -> f = functionWithDifferentArgumentTypes     // Error
   !$ error: cannot assign value of type '(Int, String) -> ()' to type '(Int, Int) -> ()'
   !! f = functionWithDifferentArgumentTypes     // Error
   !! ^
 
-  -> func functionWithDifferentNumberOfArguments(left: Int, right: Int, top: Int) {}
+  -> func functionWithDifferentNumberOfArguments(left: Int, right: Int, top: Int) { }
   -> f = functionWithDifferentNumberOfArguments // Error
   !$ error: type of expression is ambiguous without more context
   !! f = functionWithDifferentNumberOfArguments // Error
@@ -444,14 +444,14 @@ For example:
 ```swift
 let external: (() -> Void) -> Void = { _ in () }
 func takesTwoFunctions(first: (() -> Void) -> Void, second: (() -> Void) -> Void) {
-    first { first {} }       // Error
-    second { second {}  }    // Error
+    first { first { } }       // Error
+    second { second { }  }    // Error
 
-    first { second {} }      // Error
-    second { first {} }      // Error
+    first { second { } }      // Error
+    second { first { } }      // Error
 
-    first { external {} }    // OK
-    external { first {} }    // OK
+    first { external { } }    // OK
+    external { first { } }    // OK
 }
 ```
 
@@ -461,26 +461,26 @@ func takesTwoFunctions(first: (() -> Void) -> Void, second: (() -> Void) -> Void
   ```swifttest
   -> let external: (() -> Void) -> Void = { _ in () }
   -> func takesTwoFunctions(first: (() -> Void) -> Void, second: (() -> Void) -> Void) {
-         first { first {} }       // Error
-         second { second {}  }    // Error
+         first { first { } }       // Error
+         second { second { }  }    // Error
 
-         first { second {} }      // Error
-         second { first {} }      // Error
+         first { second { } }      // Error
+         second { first { } }      // Error
 
-         first { external {} }    // OK
-         external { first {} }    // OK
+         first { external { } }    // OK
+         external { first { } }    // OK
      }
   !$ error: passing a closure which captures a non-escaping function parameter 'first' to a call to a non-escaping function parameter can allow re-entrant modification of a variable
-  !! first { first {} }       // Error
+  !! first { first { } }       // Error
   !! ^
   !$ error: passing a closure which captures a non-escaping function parameter 'second' to a call to a non-escaping function parameter can allow re-entrant modification of a variable
-  !! second { second {}  }    // Error
+  !! second { second { }  }    // Error
   !! ^
   !$ error: passing a closure which captures a non-escaping function parameter 'second' to a call to a non-escaping function parameter can allow re-entrant modification of a variable
-  !! first { second {} }      // Error
+  !! first { second { } }      // Error
   !! ^
   !$ error: passing a closure which captures a non-escaping function parameter 'first' to a call to a non-escaping function parameter can allow re-entrant modification of a variable
-  !! second { first {} }      // Error
+  !! second { first { } }      // Error
   !! ^
   ```
 -->
@@ -844,9 +844,9 @@ typealias PQR = PQ & Q & R
   - test: `protocol-composition-can-have-repeats`
 
   ```swifttest
-  >> protocol P {}
-  >> protocol Q {}
-  >> protocol R {}
+  >> protocol P { }
+  >> protocol Q { }
+  >> protocol R { }
   -> typealias PQ = P & Q
   -> typealias PQR = PQ & Q & R
   ```

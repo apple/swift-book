@@ -71,7 +71,7 @@ listPhotos(inGallery: "Summer Vacation") { photoNames in
   - test: `async-via-nested-completion-handlers`
 
   ```swifttest
-  >> struct Data {}  // Instead of actually importing Foundation
+  >> struct Data { }  // Instead of actually importing Foundation
   >> func listPhotos(inGallery name: String, completionHandler: ([String]) -> Void ) {
   >>   completionHandler(["IMG001", "IMG99", "IMG0404"])
   >> }
@@ -180,7 +180,7 @@ show(photo)
   - test: `defining-async-function`
 
   ```swifttest
-  >> struct Data {}  // Instead of actually importing Foundation
+  >> struct Data { }  // Instead of actually importing Foundation
   >> func downloadPhoto(named name: String) async -> Data { return Data() }
   >> func show(_ image: Data) { }
   >> func listPhotos(inGallery name: String) async -> [String] {
@@ -281,7 +281,7 @@ func listPhotos(inGallery name: String) async throws -> [String] {
   - test: `sleep-in-toy-code`
 
   ```swifttest
-  >> struct Data {}  // Instead of actually importing Foundation
+  >> struct Data { }  // Instead of actually importing Foundation
   -> func listPhotos(inGallery name: String) async throws -> [String] {
          try await Task.sleep(for: .seconds(2))
          return ["IMG001", "IMG99", "IMG0404"]
@@ -486,7 +486,7 @@ show(photos)
   - test: `calling-with-async-let`
 
   ```swifttest
-  >> struct Data {}  // Instead of actually importing Foundation
+  >> struct Data { }  // Instead of actually importing Foundation
   >> func show(_ images: [Data]) { }
   >> func downloadPhoto(named name: String) async -> Data { return Data() }
   >> let photoNames = ["IMG001", "IMG99", "IMG0404"]
@@ -1578,7 +1578,7 @@ struct FileDescriptor {
 }
 
 @available(*, unavailable)
-extension FileDescriptor: Sendable {}
+extension FileDescriptor: Sendable { }
 ```
 
 <!--

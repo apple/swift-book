@@ -745,7 +745,7 @@ three custom initializers that are part of the `Rect` structure's definition:
 struct Rect {
     var origin = Point()
     var size = Size()
-    init() {}
+    init() { }
     init(origin: Point, size: Size) {
         self.origin = origin
         self.size = size
@@ -765,7 +765,7 @@ struct Rect {
   -> struct Rect {
         var origin = Point()
         var size = Size()
-        init() {}
+        init() { }
         init(origin: Point, size: Size) {
            self.origin = origin
            self.size = size
@@ -1127,22 +1127,22 @@ and validates that the parameters for your overriding initializer have been spec
 
   ```swifttest
   -> class C {
-        init() {}
+        init() { }
      }
   -> class D1: C {
         // this is correct
-        override init() {}
+        override init() { }
      }
   -> class D2: C {
         // this isn't correct
-        init() {}
+        init() { }
      }
   !$ error: overriding declaration requires an 'override' keyword
-  !! init() {}
+  !! init() { }
   !! ^
   !! override
   !$ note: overridden declaration is here
-  !! init() {}
+  !! init() { }
   !! ^
   ```
 -->
@@ -1156,14 +1156,14 @@ and validates that the parameters for your overriding initializer have been spec
      }
   -> class D1: C {
         // this is correct
-        override init() {}
+        override init() { }
      }
   -> class D2: C {
         // this isn't correct
-        init() {}
+        init() { }
      }
   !$ error: overriding declaration requires an 'override' keyword
-  !! init() {}
+  !! init() { }
   !! ^
   !! override
   !$ note: overridden declaration is here
@@ -2318,16 +2318,16 @@ is to force-unwrap the result of the failable superclass initializer.
 
   ```swifttest
   -> class C {
-        init() {}
+        init() { }
      }
   -> class D: C {
-        override init?() {}
+        override init?() { }
      }
   !$ error: failable initializer 'init()' cannot override a non-failable initializer
-  !!            override init?() {}
+  !!            override init?() { }
   !!                     ^
   !$ note: non-failable initializer 'init()' overridden here
-  !!            init() {}
+  !!            init() { }
   !!            ^
   ```
 -->
@@ -2341,7 +2341,7 @@ but can't be an empty string:
 class Document {
     var name: String?
     // this initializer creates a document with a nil name value
-    init() {}
+    init() { }
     // this initializer creates a document with a nonempty name value
     init?(name: String) {
         if name.isEmpty { return nil }
@@ -2357,7 +2357,7 @@ class Document {
   -> class Document {
         var name: String?
         // this initializer creates a document with a nil name value
-        init() {}
+        init() { }
         // this initializer creates a document with a nonempty name value
         init?(name: String) {
            if name.isEmpty { return nil }
@@ -2476,7 +2476,7 @@ if the `init!` initializer causes initialization to fail.
   ```swifttest
   -> struct S {
         init?(optional: Int) { self.init(iuo: optional) }
-        init!(iuo: Int) {}
+        init!(iuo: Int) { }
      }
   ```
 -->
@@ -2487,7 +2487,7 @@ if the `init!` initializer causes initialization to fail.
   ```swifttest
   -> struct S {
         init!(iuo: Int) { self.init(optional: iuo) }
-        init?(optional: Int) {}
+        init?(optional: Int) { }
      }
   ```
 -->
@@ -2498,7 +2498,7 @@ if the `init!` initializer causes initialization to fail.
   ```swifttest
   -> class C {
         convenience init?(optional: Int) { self.init(iuo: optional) }
-        init!(iuo: Int) {}
+        init!(iuo: Int) { }
      }
   ```
 -->
@@ -2509,7 +2509,7 @@ if the `init!` initializer causes initialization to fail.
   ```swifttest
   -> class C {
         convenience init!(iuo: Int) { self.init(optional: iuo) }
-        init?(optional: Int) {}
+        init?(optional: Int) { }
      }
   ```
 -->
@@ -2519,7 +2519,7 @@ if the `init!` initializer causes initialization to fail.
 
   ```swifttest
   -> class C {
-        init!(iuo: Int) {}
+        init!(iuo: Int) { }
      }
   -> class D: C {
         init?(optional: Int) { super.init(iuo: optional) }
@@ -2532,7 +2532,7 @@ if the `init!` initializer causes initialization to fail.
 
   ```swifttest
   -> class C {
-        init?(optional: Int) {}
+        init?(optional: Int) { }
      }
   -> class D: C {
         init!(iuo: Int) { super.init(optional: iuo) }
@@ -2545,7 +2545,7 @@ if the `init!` initializer causes initialization to fail.
 
   ```swifttest
   -> class C {
-        init?(i: Int) {}
+        init?(i: Int) { }
      }
   -> class D: C {
         override init!(i: Int) { super.init(i: i) }
@@ -2558,7 +2558,7 @@ if the `init!` initializer causes initialization to fail.
 
   ```swifttest
   -> class C {
-        init!(i: Int) {}
+        init!(i: Int) { }
      }
   -> class D: C {
         override init?(i: Int) { super.init(i: i) }
@@ -2572,7 +2572,7 @@ if the `init!` initializer causes initialization to fail.
   ```swifttest
   -> struct S {
         init(nonFailing: Int) { self.init(iuo: nonFailing) }
-        init!(iuo: Int) {}
+        init!(iuo: Int) { }
      }
   ```
 -->
@@ -2583,7 +2583,7 @@ if the `init!` initializer causes initialization to fail.
   ```swifttest
   -> class C {
         convenience init(nonFailing: Int) { self.init(iuo: nonFailing) }
-        init!(iuo: Int) {}
+        init!(iuo: Int) { }
      }
   ```
 -->
@@ -2593,7 +2593,7 @@ if the `init!` initializer causes initialization to fail.
 
   ```swifttest
   -> class C {
-        init!(iuo: Int) {}
+        init!(iuo: Int) { }
      }
   -> class D: C {
         init(nonFailing: Int) { super.init(iuo: nonFailing) }
@@ -2672,16 +2672,16 @@ class SomeClass {
 
   ```swifttest
   -> class C {
-        required init(i: Int) {}
+        required init(i: Int) { }
      }
   -> class D: C {
-        init() {}
+        init() { }
      }
   !$ error: 'required' initializer 'init(i:)' must be provided by subclass of 'C'
   !! }
   !! ^
   !$ note: 'required' initializer is declared in superclass here
-  !!    required init(i: Int) {}
+  !!    required init(i: Int) { }
   !!             ^
   ```
 -->
@@ -2691,13 +2691,13 @@ class SomeClass {
 
   ```swifttest
   -> class C {
-        init() {}
+        init() { }
         required convenience init(i: Int) {
            self.init()
         }
      }
   -> class D: C {
-        init(s: String) {}
+        init(s: String) { }
      }
   !$ error: 'required' initializer 'init(i:)' must be provided by subclass of 'C'
   !! }
@@ -2738,17 +2738,17 @@ class SomeSubclass: SomeClass {
 
   ```swifttest
   -> class C {
-        required init() {}
+        required init() { }
      }
   -> class D: C {
-        override required init() {}
+        override required init() { }
      }
   !$ warning: 'override' is implied when overriding a required initializer
-  !!    override required init() {}
+  !!    override required init() { }
   !! ~~~~~~~~~         ^
   !!-
   !$ note: overridden required initializer is here
-  !!    required init() {}
+  !!    required init() { }
   !!             ^
   ```
 -->
@@ -2762,7 +2762,7 @@ class SomeSubclass: SomeClass {
   ```swifttest
   -> class C {
         var x = 0
-        required init(i: Int) {}
+        required init(i: Int) { }
      }
   -> class D: C {
         var y = 0
@@ -2776,7 +2776,7 @@ class SomeSubclass: SomeClass {
   ```swifttest
   -> class C {
         var x = 0
-        init(i: Int) {}
+        init(i: Int) { }
         required convenience init() {
            self.init(i: 42)
         }
@@ -2828,7 +2828,7 @@ class SomeClass {
   - test: `defaultPropertyWithClosure`
 
   ```swifttest
-  >> class SomeType {}
+  >> class SomeType { }
   -> class SomeClass {
         let someProperty: SomeType = {
            // create a default value for someProperty inside this closure

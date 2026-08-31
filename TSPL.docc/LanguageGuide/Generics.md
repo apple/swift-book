@@ -616,8 +616,8 @@ func someFunction<T: SomeClass, U: SomeProtocol>(someT: T, someU: U) {
   - test: `typeConstraints`
 
   ```swifttest
-  >> class SomeClass {}
-  >> protocol SomeProtocol {}
+  >> class SomeClass { }
+  >> protocol SomeProtocol { }
   -> func someFunction<T: SomeClass, U: SomeProtocol>(someT: T, someU: U) {
         // function body goes here
      }
@@ -1046,14 +1046,14 @@ You do this with an empty extension,
 as described in <doc:Protocols#Declaring-Protocol-Adoption-with-an-Extension>:
 
 ```swift
-extension Array: Container {}
+extension Array: Container { }
 ```
 
 <!--
   - test: `associatedTypes`
 
   ```swifttest
-  -> extension Array: Container {}
+  -> extension Array: Container { }
   ```
 -->
 

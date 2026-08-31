@@ -2022,7 +2022,7 @@ do {
   -> func makeASandwich() throws {
          // ...
      }
-  >> func eatASandwich() {}
+  >> func eatASandwich() { }
 
   -> do {
          try makeASandwich()

@@ -33,7 +33,7 @@ For more details, see <doc:Protocols#Protocol-Extensions>.
   ```swifttest
   -> class C {
         var x = 0
-        func foo() {}
+        func foo() { }
      }
   -> extension C {
         override var x: Int {
@@ -70,7 +70,7 @@ For more details, see <doc:Protocols#Protocol-Extensions>.
   !! override func foo() {
   !!               ^
   !$ note: 'foo()' previously declared here
-  !! func foo() {}
+  !! func foo() { }
   !!      ^
   ```
 -->
@@ -89,7 +89,7 @@ extension SomeType {
   - test: `extensionSyntax`
 
   ```swifttest
-  >> struct SomeType {}
+  >> struct SomeType { }
   -> extension SomeType {
         // new functionality to add to SomeType goes here
      }
@@ -111,8 +111,8 @@ extension SomeType: SomeProtocol, AnotherProtocol {
   - test: `extensionSyntax`
 
   ```swifttest
-  >> protocol SomeProtocol {}
-  >> protocol AnotherProtocol {}
+  >> protocol SomeProtocol { }
+  >> protocol AnotherProtocol { }
   -> extension SomeType: SomeProtocol, AnotherProtocol {
         // implementation of protocol requirements goes here
      }
@@ -220,7 +220,7 @@ print("A marathon is \(aMarathon) meters long")
   - test: `extensionsCannotAddStoredProperties`
 
   ```swifttest
-  -> class C {}
+  -> class C { }
   -> extension C { var x = 0 }
   !$ error: extensions must not contain stored properties
   !! extension C { var x = 0 }
