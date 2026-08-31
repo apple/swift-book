@@ -46,6 +46,7 @@ and describes the type inference behavior of Swift.
 > *type* → *protocol-composition-type* \
 > *type* → *opaque-type* \
 > *type* → *boxed-protocol-type* \
+> *type* → *parameter-pack-type*
 > *type* → *metatype-type* \
 > *type* → *any-type* \
 > *type* → *self-type* \
@@ -1018,6 +1019,51 @@ https://github.com/swiftlang/swift-evolution/blob/main/proposals/0335-existentia
 > Grammar of a boxed protocol type:
 >
 > *boxed-protocol-type* → **`any`** *type*
+
+## Type Parameter Pack
+
+XXX OUTLINE:
+
+- `each T` creates a type parameter pack
+  when it appears in a generic parameter clause,
+  or indicates which pack should be expanded
+  when it appears in a `repeat` expression
+
+- `repeat P`, where `P` captures at least one type
+  parameter pack, expands it into a list of types
+  or values
+
+- Packs are never nested; expansion implies flattening
+
+- To expand the values, you use a parameter pack expression;
+  see <doc:Expressions#Parameter-Pack-Expression>
+
+- It's valid for a type pack to contain no elements.
+
+- list of places where type parameter pack can appear:
+
+  + generic type parameter list
+  + as an argument to a generic type parameter
+  + tuple element
+  + function type parameter list
+
+> Grammar of a type-parameter pack:
+>
+> *type-parameter-pack* → **`each`** *type*
+>
+> *type-parameter-pack-expansion* → **`repeat`** *pattern-type*
+>
+> *pattern-type* -> *type*
+
+<!--
+The grammar above overproduces:
+'each' is allowed only within a generic parameter clause
+or within the expression following 'repeat'.
+However,
+to allow 'each' in types only after 'repeat'
+we either have to allow it in any type context
+or re-implement the entire type grammar for this special case.
+-->
 
 ## Metatype Type
 

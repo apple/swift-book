@@ -2444,6 +2444,17 @@ anyCommonElements([1, 2, 3], [3])
 Writing `<T: Equatable>`
 is the same as writing `<T> ... where T: Equatable`.
 
+Use `repeat` and `each` to make generic functions
+where the number of arguments can vary.
+
+```
+func printEach<each T>(_ t: repeat each T) {
+  repeat print(each t)
+}
+
+printEach(1, "hello", true)
+```
+
 <!--
 This source file is part of the Swift.org open source project
 
