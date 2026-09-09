@@ -515,6 +515,26 @@ that meet the following criteria can be back deployed:
 - The implementation satisfies the requirements for an inlinable function,
   described in <doc:Attributes#inlinable>.
 
+### c
+
+Apply this attribute to any declaration that can be represented in C,
+such as global functions
+and nongeneric enumerations (constrained to integer raw-value types).
+The `c` attribute tells the compiler
+that a declaration is available to use in C code.
+
+Applying the `c` attribute to an enumeration
+exposes each enumeration case to C code
+as the concatenation of the enumeration name and the case name.
+The first letter of the case name is capitalized.
+For example, a case named `venus` in a Swift `Planet` enumeration
+is exposed to C code as a case named `PlanetVenus`.
+
+The `c` attribute optionally accepts a single attribute argument,
+which consists of an identifier.
+The identifier specifies the name to be exposed to C
+for the entity that the `c` attribute applies to.
+
 ### discardableResult
 
 Apply this attribute to a function or method declaration
@@ -1052,6 +1072,176 @@ Most code can use the main actor instead of defining a new global actor.
 
 [`GlobalActor`]: https://developer.apple.com/documentation/swift/globalactor
 
+### implementation
+
+Apply this attribute to a declaration
+that provides a Swift implementation
+for a declaration that's imported from another language.
+
+Implementing an interface in Swift doesn't require any changes
+to the interface declared in the C or Objective-C header file.
+If you have an existing interface,
+you can use this attribute
+to replace its existing implementation in another language
+with a Swift implementation,
+without changing the header file.
+
+#### Swift Implementation of Objective-C Declarations
+
+For declarations that are defined in an Objective-C header,
+apply the `objc` and `implementation` attributes
+to an extension in Swift that provides the implementations.
+Other code in Swift treats these implementations
+as if they were implemented in Objective-C and imported into Swift.
+The class that the extension extends must be imported from Objective-C,
+not be a root class,
+and not use lightweight generics.
+The extension can't include any protocol conformances.
+All declarations in this extension
+are implicitly marked with the `objc` attribute.
+For example,
+the following Objective-C header declares a class with one method:
+
+```objc
+NS_HEADER_AUDIT_BEGIN(nullability, sendability)
+@interface MyClass
+- (void)performSomeAction;
+@end
+NS_HEADER_AUDIT_END(nullability, sendability)
+```
+
+<!-- Omitted the header's conventional blank lines for compactness. -->
+
+You implement the class and its method in Swift as follows:
+
+```swift
+@objc @implementation
+extension MyClass {
+    func performSomeAction() { ... }
+}
+```
+
+A member of the extension that matches a declaration in the header file
+is known as a *member implementation*.
+To be considered as a match,
+a member implementation must meet the following requirements:
+
+- Its selector and Swift name is the same as the declaration it implements.
+  If needed, you can use the `objc(custom:selector:)` attribute in Swift
+  and the `NS_SWIFT_NAME(custom(_:name:))` attribute in Objective-C.
+- Its type matches the type of the declaration it implements.
+  Types marked `_Nonnull` in Objective-C can be implemented in Swift
+  either as non-optional or as an implicitly unwrapped optional.
+- Its error handling (`throws`) matches the declaration it implements.
+- Its concurrency (`async`) matches the declaration it implements.
+  For an Objective-C method that takes a completion handler as an argument,
+  which is imported into Swift
+  as both an `async` method and a method that takes a closure,
+  you can write a member implementation
+  that matches either method.
+  However, you can't implement both methods.
+- It isn't marked `final` or `override`.
+- Its access control level is `open`, `public`, `package`, or `internal`.
+- It doesn't have any other traits
+  that would be incompatible with the member it implements,
+  like the `nonobjc` attribute, `class` modifier, or mutability,
+
+Every member implementation in the extension
+must match a member declared in the Objective-C header,
+and every member declared in that Objective-C category
+must have a matching member implementation in Swift.
+If the Objective-C header doesn't specify a category,
+the declarations are part of the default category.
+When using this attribute to migrate Objective-C code into Swift,
+you either migrate one category at a time
+or you migrate individual methods by moving them between categories;
+migrating this way doesn't break source compatibility or ABI compatibility.
+For information about categories in Objective-C,
+see [Customizing Existing Classes][objc-category]
+in *Programming with Objective-C*.
+
+[objc-category]: https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/CustomizingExistingClasses/CustomizingExistingClasses.html
+
+<!-- Alternate xrefs:
+Cocoa Core Competencies article, summarizes and links to the above
+https://developer.apple.com/library/archive/documentation/General/Conceptual/DevPedia-CocoaCore/Category.html
+
+The Objective-C Programming Language, superseded by the above
+https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ObjectiveC/Chapters/ocCategories.html
+-->
+
+In addition to member implementations,
+you can write the following declarations in the extension,
+but they can't match a declaration in the Objective-C header:
+
+- Overrides for superclass members.
+  You mark these declarations with `override` as usual.
+- Helper members with a `fileprivate` or `private` access control level
+  that aren't marked `final`.
+  To access them from Objective-C,
+  either declare them in a header that's not visible to the Swift compiler
+  or access them using their selector.
+- Helper members  with `internal`, `fileprivate`, or `private` access,
+  which are accessible only from other Swift code.
+  You mark these declarations `final`,
+  and they're implicitly marked with the `nonobjc` attribute.
+  For initializers, you apply the `nonobjc` attribute instead.
+- APIs with `public` or `package` access,
+  which are only accessible to Swift clients.
+  You mark these declarations `final`,
+  and they're implicitly marked with the `nonobjc` attribute.
+  For initializers, you apply the `nonobjc` attribute instead.
+
+The extension can include declarations for stored properties and initializers,
+which is an exception to the rule that
+you can't declare stored properties or initializers in extensions.
+
+To specify an Objective-C category for an extension's members,
+write its name as an argument to the `objc` attribute.
+The name must match an category declared in the Objective-C header file.
+For example, if the header contains the following:
+
+```objc
+@interface MyClass (SomeCategory)
+- (void)someCategoryMethod;
+@end
+```
+
+The Swift code to implement `someCategoryMethod()` is as follows:
+
+```swift
+@objc(SomeCategory) @implementation
+extension MyClass {
+	func someCategoryMethod() { ... }
+}
+```
+
+#### Swift Implementation of C Declarations
+
+For a declaration that's defined in an C header,
+apply the `c` and `implementation` attributes
+to an declaration in Swift that provides the implementation.
+Other code in Swift treats these implementations
+as if they were implemented in C and imported into Swift.
+The implementation in Swift
+needs to have the same name and type
+as an imported C implementation of that declaration.
+For example,
+the following C header declares a global function:
+
+```c
+int myFunction(int value);
+```
+
+You implement the function in Swift as follows:
+
+```swift
+@c @implementation
+func myFunction(_ value: CInt) -> CInt {
+    return value
+}
+```
+
 ### inlinable
 
 Apply this attribute to a
@@ -1305,7 +1495,7 @@ Applying this attribute also implies the `objc` attribute.
 ### objc
 
 Apply this attribute to any declaration that can be represented in Objective-C ---
-for example, nonnested classes, protocols,
+for example, global functions, nonnested classes, protocols,
 nongeneric enumerations (constrained to integer raw-value types),
 properties and methods (including getters and setters) of classes,
 protocols and optional members of a protocol,
@@ -1350,8 +1540,10 @@ which consists of an identifier.
 The identifier specifies the name to be exposed to Objective-C
 for the entity that the `objc` attribute applies to.
 You can use this argument to name
-classes, enumerations, enumeration cases, protocols,
+global functions, classes, enumerations, enumeration cases, protocols,
 methods, getters, setters, and initializers.
+You can also use this argument on an extension,
+to specify the Objective-C category for the extension's members.
 If you specify the Objective-C name
 for a class, protocol, or enumeration,
 include a three-letter prefix on the name,
