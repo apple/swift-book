@@ -852,7 +852,7 @@ if let beginsWithThe =
         print("John's building identifier doesn't begin with \"The\".")
     }
 }
-// Prints "John's building identifier begins with "The"."
+// Prints "John's building identifier begins with \"The\"."
 ```
 
 <!--
