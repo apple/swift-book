@@ -2665,7 +2665,7 @@ For more information and examples,
 see <doc:Generics#Associated-Types>.
 
 You use a generic `where` clause in a protocol declaration
-to add constraints to an associated types inherited from another protocol,
+to add constraints to an associated type inherited from another protocol,
 without redeclaring the associated types.
 For example, the declarations of `SubProtocol` below are equivalent:
 
