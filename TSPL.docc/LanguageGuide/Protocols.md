@@ -1263,8 +1263,8 @@ Swift provides a synthesized implementation of `Equatable`
 for the following kinds of custom types:
 
 - Structures that have only stored properties that conform to the `Equatable` protocol
-- Enumerations that have only associated types that conform to the `Equatable` protocol
-- Enumerations that have no associated types
+- Enumerations that have only associated values that conform to the `Equatable` protocol
+- Enumerations that have no associated values
 
 To receive a synthesized implementation of `==`,
 declare conformance to `Equatable`
@@ -1322,8 +1322,8 @@ Swift provides a synthesized implementation of `Hashable`
 for the following kinds of custom types:
 
 - Structures that have only stored properties that conform to the `Hashable` protocol
-- Enumerations that have only associated types that conform to the `Hashable` protocol
-- Enumerations that have no associated types
+- Enumerations that have only associated values that conform to the `Hashable` protocol
+- Enumerations that have no associated values
 
 To receive a synthesized implementation of `hash(into:)`,
 declare conformance to `Hashable`
@@ -1332,7 +1332,7 @@ without implementing a `hash(into:)` method yourself.
 
 Swift provides a synthesized implementation of `Comparable`
 for enumerations that don't have a raw value.
-If the enumeration has associated types,
+If the enumeration has associated values,
 they must all conform to the `Comparable` protocol.
 To receive a synthesized implementation of `<`,
 declare conformance to `Comparable`
