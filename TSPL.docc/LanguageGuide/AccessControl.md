@@ -1272,8 +1272,6 @@ for individual type members.
 
 You can't provide an explicit access-level modifier for an extension
 if you're using that extension to add protocol conformance.
-Instead, the protocol's own access level is used to provide
-the default access level for each protocol requirement implementation within the extension.
 
 <!--
   - test: `extensions_Module1, extensions_Module1_PublicAndInternal, extensions_Module1_Private`
