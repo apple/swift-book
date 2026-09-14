@@ -2216,7 +2216,7 @@ are available on the deployment target specified by your project.
 Swift reports an error at compile time
 if you try to use an API that isn't available.
 
-You use an *availability condition* in an `if` or `guard` statement
+You use an *availability condition* in an `if`, `while`, or `guard` statement
 to conditionally execute a block of code,
 depending on whether the APIs you want to use are available at runtime.
 The compiler uses the information from the availability condition
