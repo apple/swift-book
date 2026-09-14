@@ -1324,7 +1324,7 @@ the [`warning(_:)`][] and [`error(_:)`][] macros in the Swift standard library.
 
 An *availability condition* is used as a condition of an `if`, `while`,
 and `guard` statement to query the availability of APIs at runtime,
-based on specified platforms arguments.
+based on specified platform arguments.
 
 An availability condition has the following form:
 
