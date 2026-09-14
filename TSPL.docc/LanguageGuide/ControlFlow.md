@@ -1286,7 +1286,7 @@ matches any point with an `x` value of `0`
 and assigns the point's `y` value to the temporary constant `y`.
 
 After the temporary constants are declared,
-they can be used within the case's code block.
+they can be used within the case's body.
 Here, they're used to print the categorization of the point.
 
 This `switch` statement doesn't have a `default` case.
