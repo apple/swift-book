@@ -1718,11 +1718,11 @@ s.$x.wrapper  // WrapperWithProjection value
 
 If the projected value wraps a variable that's named using a raw identifier,
 you also use a raw identifier to refer to
-the value's synthesized storage and its the projected value.
+the value's synthesized storage and its projected value.
 Write the underscore or dollar sign inside the backticks;
 for example, `` someValue.`_some raw identifier` ``
 refers to the synthesized storage
-for a property that include spaces in its name,
+for a property that includes spaces in its name,
 and `` someValue.`$some raw identifier` ``
 refers to its projected value.
 
