@@ -32,7 +32,7 @@ Swift code is compiled and optimized to get the most out of modern hardware.
 The syntax and standard library have been designed
 based on the guiding principle that
 the obvious way to write your code should also perform the best.
-Its combination of safety and speed make Swift an excellent choice for
+Its combination of safety and speed makes Swift an excellent choice for
 everything from "Hello, world!" to an entire operating system.
 
 Swift combines a modern, lightweight syntax
