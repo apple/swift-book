@@ -1395,7 +1395,7 @@ For more information, see
 > can also change the runtime name for that declaration.
 > You use the runtime name when calling functions
 > that interact with the Objective-C runtime,
-> like [`NSClassFromString(_:)`](https://developer.apple.com/documentation/foundation/1395135-nsclassfromstring),
+> like [`NSClassFromString(_:)`](https://developer.apple.com/documentation/foundation/nsclassfromstring(_:)),
 > and when specifying class names in an app's Info.plist file.
 > If you specify a name by passing an argument,
 > that name is used as the name in Objective-C code
@@ -2550,7 +2550,7 @@ passing this class's name as the name of the delegate class.
 
 If you don't use this attribute,
 supply a `main.swift` file with code at the top level
-that calls the [`UIApplicationMain(_:_:_:_:)`](https://developer.apple.com/documentation/uikit/1622933-uiapplicationmain) function.
+that calls the [`UIApplicationMain(_:_:_:_:)`](https://developer.apple.com/documentation/uikit/uiapplicationmain(_:_:_:_:)-1yub7) function.
 For example,
 if your app uses a custom subclass of `UIApplication`
 as its principal class,
@@ -2622,9 +2622,9 @@ with the same name that are accessible from the same scope.
 
 For example,
 the Swift standard library includes both a top-level
-[`min(_:_:)`](https://developer.apple.com/documentation/swift/1538339-min/)
+[`min(_:_:)`](https://developer.apple.com/documentation/swift/min(_:_:))
 function and a
-[`min()`](https://developer.apple.com/documentation/swift/sequence/1641174-min)
+[`min()`](https://developer.apple.com/documentation/swift/sequence/min())
 method for sequences with comparable elements.
 The sequence method is declared with the `warn_unqualified_access` attribute
 to help reduce confusion
