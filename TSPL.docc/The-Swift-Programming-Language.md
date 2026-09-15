@@ -1,4 +1,4 @@
-# The Swift Programming Language (6.4 beta)
+# The Swift Programming Language (6.4)
 
 Write safe, fast, expressive code with a modern, general-purpose language.
 
