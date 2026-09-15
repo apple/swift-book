@@ -2002,7 +2002,7 @@ in the declaration of `SimpleStructure`
 to mark a method that modifies the structure.
 The declaration of `SimpleClass` doesn't need
 any of its methods marked as mutating
-because methods on a class can always modify the class.
+because methods on a class can always modify the instance.
 
 Use `extension` to add functionality to an existing type,
 such as new methods and computed properties.
