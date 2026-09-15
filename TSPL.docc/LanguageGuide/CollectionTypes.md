@@ -616,7 +616,7 @@ or when you need to ensure that an item only appears once.
 > Note: Swift's `Set` type is bridged to Foundation's `NSSet` class.
 >
 > For more information about using `Set` with Foundation and Cocoa,
-> see [Bridging Between Set and NSSet](https://developer.apple.com/documentation/swift/set#2845530).
+> see [Bridging Between Set and NSSet](https://developer.apple.com/documentation/swift/set#Bridging-Between-Set-and-NSSet).
 
 <!--
   TODO: Add note about performance characteristics of contains on sets as opposed to arrays?
@@ -1065,7 +1065,7 @@ the definition for a particular word.
 > Note: Swift's `Dictionary` type is bridged to Foundation's `NSDictionary` class.
 >
 > For more information about using `Dictionary` with Foundation and Cocoa,
-> see [Bridging Between Dictionary and NSDictionary](https://developer.apple.com/documentation/swift/dictionary#2846239).
+> see [Bridging Between Dictionary and NSDictionary](https://developer.apple.com/documentation/swift/dictionary#Bridging-Between-Dictionary-and-NSDictionary).
 
 ### Dictionary Type Shorthand Syntax
 

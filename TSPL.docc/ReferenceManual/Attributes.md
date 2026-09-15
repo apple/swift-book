@@ -648,7 +648,7 @@ must have a single parameter that conforms to the
 [`ExpressibleByDictionaryLiteral`](https://developer.apple.com/documentation/swift/expressiblebydictionaryliteral)
 protocol,
 and the return type can be any type.
-The parameter's [`Key`](https://developer.apple.com/documentation/swift/expressiblebydictionaryliteral/2294108-key)
+The parameter's [`Key`](https://developer.apple.com/documentation/swift/expressiblebydictionaryliteral/key)
 must be
 [`ExpressibleByStringLiteral`](https://developer.apple.com/documentation/swift/expressiblebystringliteral).
 The previous example uses [`KeyValuePairs`](https://developer.apple.com/documentation/swift/keyvaluepairs)
