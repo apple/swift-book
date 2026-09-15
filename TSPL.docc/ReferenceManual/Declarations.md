@@ -860,7 +860,7 @@ A *parameter modifier* changes how an argument is passed to the function.
 ```
 
 To use a parameter modifier,
-write `inout`, `borrowing`, or `consuming`
+write `inout`, `isolated`, `nonisolated`, `borrowing`, or `consuming`
 before the argument's type.
 
 ```swift
@@ -1058,6 +1058,32 @@ see <doc:Functions#In-Out-Parameters>.
   !! ^
   ```
 -->
+
+#### Actor-Isolated Parameters
+
+The `isolated` modifier on a parameter
+indicates that the function is actor-isolated,
+in the same way methods of an actor are isolated to that actor's instances.
+
+When calling a function that has a parameter marked `isolated`,
+the argument to that parameter must be an instance of an actor type.
+The function is isolated to that actor instance,
+and the function can access that actor's state.
+
+```swift
+actor SomeActor {
+    var number: Int
+    init () { self.number = 12 }
+}
+let anActor = SomeActor()
+anActor.number = 99  // Error: Can't access isolated state
+
+func setNumber(to newNumber: Int, on myActor: isolated SomeActor) {
+	myActor.number = 34  // OK
+}
+```
+
+A function can have at most one parameter marked `isolated`.
 
 #### Borrowing and Consuming Parameters
 
@@ -1709,7 +1735,7 @@ but the new method must preserve its return type and nonreturning behavior.
 > *external-parameter-name* → *identifier* \
 > *local-parameter-name* → *identifier* \
 > *parameter-type-annotation* → **`:`** *attributes*_?_ *parameter-modifier*_?_ *type* \
-> *parameter-modifier* → **`inout`** | **`borrowing`** | **`consuming`**
+> *parameter-modifier* → **`inout`** | **`borrowing`** | **`consuming`** | **`isolated`** | **`nonisolated`**
 > *default-argument-clause* → **`=`** *expression*
 
 <!--
@@ -2266,10 +2292,8 @@ to synchronous functions,
 but not to asynchronous functions.
 
 Actors can also have nonisolated members,
-whose declarations are marked with the `nonisolated` keyword.
-A nonisolated member executes like code outside of the actor:
-It can't interact with any of the actor's isolated state,
-and callers don't mark it with `await` when using it.
+whose declarations are marked with the `nonisolated` keyword
+as described in <doc:Declarations#Declaration-Modifiers>.
 
 Members of an actor can be marked with the `@objc` attribute
 only if they are nonisolated or asynchronous.
@@ -3834,6 +3858,119 @@ that introduces the declaration.
   once, when the property is first accessed.
   For an example of how to use the `lazy` modifier,
   see <doc:Properties#Lazy-Stored-Properties>.
+
+- term `nonisolated`:
+  Apply this modifier to a declaration to suppress any implicit isolation.
+  For example, by default,
+  properties of an actor are implicitly isolated to that actor ---
+  you can apply `nonisolated` to the property declaration
+  to define a nonisolated property that isn't isolated to that actor.
+  Likewise,
+  a nonisolated method of a class that's marked with the `MainActor` attribute
+  isn't isolated to the main actor.
+
+  A nonisolated method or property
+  is isolated in the same way as any other function or variable
+  that isn't isolated to an actor.
+  For isolation purposes,
+  the body of a nonisolated declaration
+  is treated as if it were outside the actor.
+  Because nonisolated methods and nonisolated properties
+  can't directly access actor-isolated state,
+  you mark calls to isolated methods with `await`
+  like you do in code outside the actor.
+
+  <!--
+  You can write "nonisolated actor", but that's a bug <rdar://158142168>.
+  -->
+
+  When you mark a method or property `nonisolated`,
+  code that calls or accesses it don't mark use `await`.
+  This can be a first step towards adopting concurrency,
+  by marking code that you want to move off of the main actor
+  and then using the compiler errors to guide refactoring.
+
+  Swift restricts nonisolated stored variables,
+  to ensure they provide data isolation without using an actor.
+  Nonisolated global variables,
+  static properties,
+  and instance properties of actors and sendable classes
+  must be constants of a sendable type.
+  Nonisolated instance properties of sendable structures
+  must have a sendable type, but they are allowed to be mutable.
+
+  <!-- XXX TR:
+  Should we add an upcoming feature flag note somewhere here?
+  The code example from SE-0449 compiles
+  only when you have approachable concurrency turned on.
+
+  class NonSendable { }
+  class MyClass {
+      nonisolated var x: NonSendable = NonSendable()
+  }
+  -->
+
+  If a stored variable meets the conditions for being nonisolated
+  but isn't marked `nonisolated`,
+  you  can use it as a nonisolated property
+  only within the module that defines it.
+  To use it as `nonisolated` outside of that module,
+  mark it `nonisolated` explicitly.
+
+  On a declaration inside an actor,
+  `nonisolated` suppresses the default isolation to `self`.
+  Because a nonisolated member of an actor
+  can't access the actor's isolated state,
+  it can satisfy a synchronous requirement of a protocol.
+
+  On a structure, class, or enumeration declaration,
+  `nonisolated` applies to that type and its members,
+  but not to any nested type declarations.
+
+  On a protocol declaration,
+  `nonisolated` suppresses any inferred global-actor isolation,
+  which allows conforming types to be either actor-isolated or nonisolated.
+
+  ```swift
+  // Explicitly isolated to the main actor.
+  @MainActor protocol SomeProtocol
+
+  // Implicitly isolated to the main actor.
+  protocol MyProtocol: SomeProtocol
+  struct MyStruct: SomeProtocol
+
+  // Not isolated to the main actor.
+  nonisolated protocol AnotherProtocol: SomeProtocol
+  nonisolated struct AnotherStruct: SomeProtocol
+  ```
+
+  On an extension,
+  `nonisolated` applies to each declaration in the extension.
+
+  <!--
+  TODO: When updating TSPL for SE-0434,
+  expand the above with the more specific rules.
+  -->
+
+  You can't write `nonisolated` on a declaration
+  that's also marked with the `MainActor` attribute
+  or isolated to another global actor,
+  on a sendable type's property if that property's type isn't sendable,
+  or on a sendable class's stored property if that property is mutable.
+
+- term `nonisolated(unsafe)`:
+  Apply this modifier to a stored property to suppress any implicit isolation,
+  even though the property doesn't satisfy the restrictions
+  and can't be marked `nonisolated`.
+  You are responsible for ensuring
+  that all access to the property is correctly ordered.
+  This may be appropriate if, for example,
+  you are protecting the value with a mutex
+  and can't use the [`Mutex`][] type from the Synchronization module.
+  <!-- XXX TR: Is the fact that it's a non-Mutex mutex the reason
+  they have to write nonisolated(unsafe) instead of just nonisolated? -->
+
+  [`Mutex`]: https://developer.apple.com/documentation/synchronization/mutex
 
 - term `optional`:
   Apply this modifier to a protocol's property, method,
