@@ -2,10 +2,15 @@
 
 Review the recent changes to this book.
 
-**2026-07-06**
+**2026-09-14**
 
 - Updated for Swift 6.4.
-- Minor corrections and additions throughout.
+- Add information about protocols that have superclass requirements
+  to the <doc:Protocols#Class-Only-Protocols> section.
+- Added information about raw identifiers
+  to the <doc:LexicalStructure#Identifiers> section.
+- Added information about body macros
+  to the <doc:Attributes#attached> section.
 
 **2026-03-23**
 
