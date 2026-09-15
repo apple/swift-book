@@ -590,7 +590,7 @@ All of Swift's basic types (such as `String`, `Int`, `Double`, and `Bool`)
 are hashable by default.
 For information about
 making your own custom types conform to the `Hashable` protocol,
-see [Conforming to the Hashable Protocol](https://developer.apple.com/documentation/swift/hashable#2849490).
+see [Conforming to the Hashable Protocol](https://developer.apple.com/documentation/swift/hashable#Conforming-to-the-Hashable-Protocol).
 
 You can define your own type constraints when creating custom generic types,
 and these constraints provide much of the power of generic programming.

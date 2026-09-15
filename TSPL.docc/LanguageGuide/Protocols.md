@@ -1242,13 +1242,13 @@ to implement the protocol requirements yourself.
   as long as the section stays around, that topic ID will be there too.
 
   Conforming to the Equatable Protocol
-  https://developer.apple.com/documentation/swift/equatable#2847780
+  https://developer.apple.com/documentation/swift/equatable#Conforming-to-the-Equatable-Protocol
 
   Conforming to the Hashable Protocol
-  https://developer.apple.com/documentation/swift/hashable#2849490
+  https://developer.apple.com/documentation/swift/hashable#Conforming-to-the-Hashable-Protocol
 
   Conforming to the Comparable Protocol
-  https://developer.apple.com/documentation/swift/comparable#2845320
+  https://developer.apple.com/documentation/swift/comparable#Conforming-to-the-Comparable-Protocol
 
   ^-- Need to add discussion of synthesized implementation
   to the reference for Comparable, since that's new
@@ -1256,7 +1256,7 @@ to implement the protocol requirements yourself.
   Some of the information in the type references above
   is also repeated in the "Conform Automatically to Equatable and Hashable" section
   of the article "Adopting Common Protocols".
-  https://developer.apple.com/documentation/swift/adopting_common_protocols#2991123
+  https://developer.apple.com/documentation/swift/adopting-common-protocols#Conform-Automatically-to-Equatable-and-Hashable
 -->
 
 Swift provides a synthesized implementation of `Equatable`

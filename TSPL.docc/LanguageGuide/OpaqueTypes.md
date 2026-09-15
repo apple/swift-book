@@ -194,7 +194,7 @@ func max<T>(_ x: T, _ y: T) -> T where T: Comparable { ... }
 ```
 
 <!--
-  From https://developer.apple.com/documentation/swift/1538951-max
+  From https://developer.apple.com/documentation/swift/max(_:_:)
   Not test code because it won't actually compile
   and there's nothing to meaningfully test.
 -->

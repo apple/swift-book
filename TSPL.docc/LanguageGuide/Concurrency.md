@@ -681,7 +681,7 @@ For more flexibility, use the `isCancelled` property,
 which lets you perform clean-up work as part of stopping the task,
 like closing network connections and deleting temporary files.
 
-[`Task.checkCancellation()`]: https://developer.apple.com/documentation/swift/task/3814826-checkcancellation
+[`Task.checkCancellation()`]: https://developer.apple.com/documentation/swift/task/checkcancellation()
 [`Task.isCancelled` type]: https://developer.apple.com/documentation/swift/task/iscancelled-swift.type.property
 
 ```swift
@@ -884,7 +884,7 @@ which could create a race condition.
 You can explicitly insert a suspension point
 by calling the [`Task.yield()`][] method.
 
-[`Task.yield()`]: https://developer.apple.com/documentation/swift/task/3814840-yield
+[`Task.yield()`]: https://developer.apple.com/documentation/swift/task/yield()
 
 ```swift
 func generateSlideshow(forGallery gallery: String) async {
